@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd"> 
+<mapper namespace="user">	
+	
+	
+	<select id="getStudy" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.StudyInfo">
+		selete * from hs_study_info where idx = #{idx}
+	</select>
+	
+	<!-- 스터디 삭제 -->
+	<delete id="deleteStudy" parameterType="java.lang.Integer">
+		delete from hs_study_info where idx = #{idx}
+	</delete>
+	
+	<!-- 스터디 수정 -->
+	<update id="updateStudy" parameterType="com.hs.app.user.vo.StudyInfo">
+		update 
+			hs_study_info
+		set
+			img = #{img},
+			title = #{title},
+			note = #{note},
+			station = #{station},
+			signdate = #{signdate},
+			maxPeople = #{maxPeople}
+		where
+			idx = #{idx}
+	</update>
+	
+	<!-- 스터디 등록 -->
+	<insert id="insertStudy" parameterType="com.hs.app.user.vo.StudyInfo">
+		insert into hs_study_info 
+			(userIdx, regdate, img, title, note, viewCount, station, signdate, maxPeople, enabled)
+		values(#{userIdx}, now(), #{img}, #{title}, #{note}, 0, #{station}, #{signdate}, #{maxPeople}, true)	
+	</insert>
+	<!-- 방금 등록한 스터디 고유번호 쿼리 -->
+	<select id="getInsertedStudyIdx" parameterType="com.hs.app.user.vo.StudyInfo" resultType="java.lang.Integer">
+		select idx from hs_study_info where title = #{title} and userIdx = #{userIdx} order by idx desc limit 1 
+	</select>
+	
+	<!-- 스터리 목록 쿼리 -->
+	<select id="getStudySize" resultType="java.lang.Integer">
+		select count(*) from hs_study_info where enabled = true
+	</select>
+	<select id="loadStudy" parameterType="java.util.Map" resultType="com.hs.app.user.vo.StudyInfo">
+		select 
+			*
+		from 
+			hs_study_info 
+		where
+			enabled = true
+		order by
+            b.idx desc 
+        limit 
+            #{startRow}, #{rowBlockCount}
+	</select>
+
+	<!-- 특정 스터디를 수강하고 있는 회원 목록 쿼리 -->
+	<select id="getStudyStudents" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.StudyStudent">
+		select 
+			a.idx as idx,
+			a.studyIdx as studyIdx,
+			a.userIdx as userIdx,
+			a.regdate as regdate,
+			b.img as img,
+			b.name as name,
+			b.email as email
+		from
+			hs_study_regist a,
+			hs_user_info b
+		where
+			a.userIdx = b.idx
+		and 
+			a.studyIdx = #{studyIdx} 
+		order by
+			a.regdate desc 
+	</select>
+	
+	<!-- 스터디 탈퇴 -->
+	<delete id="deleteStudent" parameterType="java.util.Map">
+		delete from hs_study_regist where studyIdx = #{studyIdx} and userIdx = #{userIdx}
+	</delete>
+	
+	<!-- 스터디 가입 -->
+	<insert id="insertStudent" parameterType="java.util.Map">
+		insert into hs_study_regist 
+			(studyIdx, userIdx, regdate)
+		values
+			(#{studyIdx}, #{userIdx}, now())
+	</insert>
+	
+	
+	<select id="getUser" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.UserInfo">
+		select * from hs_user_info where idx = #{idx}
+	</select>
+	
+	
+
+<!-- idx int(11) unsigned not null auto_increment primary key,
+	studyIdx int(11) unsigned not null,
+	userIdx int(11) unsigned not null,
+	regdate datetime not null -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+    
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 가입인증메일정보 등록 -->
+
+	 <update id="updateEnableCheckEmail" parameterType="java.lang.Integer">
+	 	update hs_user_check_email 
+	 	set enabled = false 
+	 	where idx = #{idx}
+	 </update>
+	 <select id="hasCheckEmail" parameterType="java.util.Map" resultType="java.lang.Integer">
+	 	select idx from hs_user_check_email 
+	 	where enabled = true and userIdx = #{userIdx} and signkey = #{signKey} and lastdate >= now()  
+	 </select>
+	 <insert id="insertCheckEmail" parameterType="java.util.Map">
+	 	insert into hs_user_check_email  
+	 		(userIdx, signKey, enabled, signdate, lastdate)
+	 	values
+	 		(#{userIdx}, #{signKey}, true, now(), DATE_ADD(now(), INTERVAL 1 DAY))
+	 </insert>
+	
+	
+	
+	
+	
+	<update id="updateUserImgIntro" parameterType="com.hs.app.user.vo.UserInfo">
+		update hs_user_info
+		set
+			intro = #{intro},
+			img1 = #{img1},
+			img2 = #{img2},
+			img3 = #{img3},
+			img4 = #{img4}
+		where 
+			idx = #{idx}
+	</update>
+	
+	<!-- 회원 기본정보 수정 -->
+	<update id="updateUserInfo" parameterType="com.hs.app.user.vo.UserInfo">
+		update hs_user_info
+		set
+			phonenm = #{phonenm},
+			moddate = now(),
+			birthdate = #{birthdate},
+			tasu = #{tasu},
+			region = #{region},
+			accountHolder = #{accountHolder},
+			accountBank = #{accountBank},
+			accountNumber = #{accountNumber}
+			<!-- name, gender -->
+		where
+			idx = #{idx}
+	</update>
+
+	
+	<select id="getUserIdxByEmail" parameterType="java.lang.String" resultType="com.hs.app.user.vo.UserInfo">
+		select
+			idx, name, email, phonenm, password, img,
+            DATE_FORMAT(regdate, '%Y-%m-%d') as regdate, enabled,
+            (select group_concat(authority) from hs_user_auth where userIdx = a.idx) as authList       
+		from 
+			hs_user_info as a
+		where 
+			email = #{email}
+	</select>
+	
+	<!-- Insert User Infomation -->
+	<insert id="insertUserInfo" parameterType="com.hs.app.user.vo.UserInfo">
+		insert into hs_user_info 
+			(password, name, email, phonenm, regdate, img, enabled)
+		values 
+			(#{password}, #{name}, #{email}, #{phonenm}, now(), null, true)
+	</insert>
+	
+
+
+	
+	<update id="updateUserPassword" parameterType="java.util.Map">
+		update hs_user_info set password = #{password} where idx = #{idx}
+	</update>
+	
+	<update id="updateUserEnable" parameterType="java.util.Map">
+		update hs_user_info set enabled = #{eFlag} where idx = #{idx}
+	</update>
+	
+	<delete id="deleteAuth" parameterType="java.util.Map">
+		delete from hs_user_auth where userIdx = #{userIdx} and authority = #{authName}
+	</delete>
+	<insert id="insertAuth" parameterType="java.util.Map">
+		insert into hs_user_auth (userIdx, authority) values(#{userIdx}, #{authName})
+	</insert>
+	
+	
+	
+
+    
+    
+  
+	
+	
+<!-- 
+
+# 회원 정보		
+create table hs_user_info (
+	idx int(11) unsigned not null auto_increment primary key,
+	password text not null,
+	name varchar(15) not null unique,
+	email varchar(50) not null unique,
+	phonenm varchar(15) not null,
+	regdate datetime not null,
+	img varchar(255) null,
+	enabled tinyint(1) not null default false
+);
+
+insert into hs_user_info (id, password, name, email, phonenm, regdate, moddate, findate) values('root','root','관리자','root@test.com','01099998888',now(),now(),now());
+
+
+
+# 회원 권한
+create table hs_user_auth (
+	idx int(11) unsigned not null auto_increment primary key,
+	userIdx int(11) unsigned not null,
+	authority varchar(50) not null
+);
+
+insert into hs_user_auth (userIdx, authority) values(1,'ROLE_USER');
+insert into hs_user_auth (userIdx, authority) values(1,'ROLE_MASTER');
+
+
+
+
+# 회원 가입인증 
+create table hs_user_secure_join (
+	idx int(11) unsigned not null auto_increment primary key,
+	userIdx int(11) unsigned not null,
+	signkey varchar(50) not null, 
+	enabled tinyint(1) not null default true,
+	signdate datetime not null,
+	lastdate datetime not null 
+);
+# 회원 비번찾기
+create table hs_user_secure_pw (
+	idx int(11) unsigned not null auto_increment primary key,
+	userIdx int(11) unsigned not null,
+	signkey varchar(50) not null,
+	enabled tinyint(1) not null default true,
+	signdate datetime not null,
+	lastdate datetime not null
+);
+
+
+
+
+
+
+
+
+
+
+
+.......................................
+
+
+
+scp -r ./ngle tongchun@10.10.0.56:/home/tongchun
+
+# Theme
+scp -r ./src/main/webapp/backup/hdgf/theme golfdate24@golfdate.co.kr:/home/hosting_users/golfdate24/tomcat/webapps/ROOT/
+
+# Resources
+scp -r ./src/main/webapp/backup/hdgf/resources golfdate24@golfdate.co.kr:/home/hosting_users/golfdate24/tomcat/webapps/ROOT/
+
+# Config
+scp -r ./src/main/webapp/backup/hdgf/WEB-INF/config golfdate24@golfdate.co.kr:/home/hosting_users/golfdate24/tomcat/webapps/ROOT/WEB-INF/
+
+# Classes
+scp -r ./src/main/webapp/backup/hdgf/WEB-INF/classes/com golfdate24@golfdate.co.kr:/home/hosting_users/golfdate24/tomcat/webapps/ROOT/WEB-INF/classes
+
+# SqlMap
+scp -r ./src/main/webapp/backup/hdgf/WEB-INF/classes/sqlmap golfdate24@golfdate.co.kr:/home/hosting_users/golfdate24/tomcat/webapps/ROOT/WEB-INF/classes
+
+# Velocity
+scp -r ./src/main/webapp/backup/hdgf/WEB-INF/classes/velocity golfdate24@golfdate.co.kr:/home/hosting_users/golfdate24/tomcat/webapps/ROOT/WEB-INF/classes
+
+
+
+
+# Lib
+scp -r ./src/main/webapp/backup/hdgf/WEB-INF/lib golfdate24@golfdate.co.kr:/home/hosting_users/golfdate24/tomcat/webapps/ROOT/WEB-INF
+
+
+
+
+scp -r ./src/main/webapp/backup/cia777/resources cia777@cia777.cafe24.com:/home/hosting_users/cia777/tomcat/webapps/ROOT/
+
+
+scp -r ./src/main/webapp/backup/cia777/WEB-INF/config cia777@cia777.cafe24.com:/home/hosting_users/cia777/tomcat/webapps/ROOT/WEB-INF/
+
+scp -r ./src/main/webapp/backup/cia777/WEB-INF/classes/com cia777@cia777.cafe24.com:/home/hosting_users/cia777/tomcat/webapps/ROOT/WEB-INF/classes
+
+scp -r ./src/main/webapp/backup/cia777/WEB-INF/classes/sqlmap cia777@cia777.cafe24.com:/home/hosting_users/cia777/tomcat/webapps/ROOT/WEB-INF/classes
+
+
+
+scp -r ./src/main/webapp/backup/cia777/WEB-INF/lib cia777@cia777.cafe24.com:/home/hosting_users/cia777/tomcat/webapps/ROOT/WEB-INF
+
+scp -r ./src/main/webapp/backup/cia777/theme cia777@cia777.cafe24.com:/home/hosting_users/cia777/tomcat/webapps/ROOT/
+
+scp -r ./src/main/webapp/backup/cia777/WEB-INF/web.xml cia777@cia777.cafe24.com:/home/hosting_users/cia777/tomcat/webapps/ROOT/WEB-INF/
+
+scp -r ./src/main/webapp/backup/cia777/WEB-INF/classes/log4j.xml cia777@cia777.cafe24.com:/home/hosting_users/cia777/tomcat/webapps/ROOT/WEB-INF/classes
+
+-->
+	
+
+
+
+</mapper>

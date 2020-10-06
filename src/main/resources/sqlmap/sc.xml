@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+# 회원 정보		
+create table hs_user_info (
+	idx int(11) unsigned not null auto_increment primary key,
+	password text not null,
+	name varchar(15) not null unique,
+	email varchar(50) not null unique,
+	phonenm varchar(15) not null,
+	regdate datetime not null,
+	img varchar(255) null,
+	enabled tinyint(1) not null default false
+);
+# 회원 권한
+create table hs_user_auth (
+	idx int(11) unsigned not null auto_increment primary key,
+	userIdx int(11) unsigned not null,
+	authority varchar(50) not null
+);
+# 회원 가입인증 
+create table hs_user_secure_join (
+	idx int(11) unsigned not null auto_increment primary key,
+	userIdx int(11) unsigned not null,
+	signkey varchar(50) not null, 
+	enabled tinyint(1) not null default true,
+	signdate datetime not null,
+	lastdate datetime not null 
+);
+# 회원 비번찾기
+create table hs_user_secure_pw (
+	idx int(11) unsigned not null auto_increment primary key,
+	userIdx int(11) unsigned not null,
+	signkey varchar(50) not null,
+	enabled tinyint(1) not null default true,
+	signdate datetime not null,
+	lastdate datetime not null
+);
+
+
+
+# 스터디 정보
+create table hs_study_info (
+	idx int(11) unsigned not null auto_increment primary key,
+	userIdx int(11) unsigned not null,
+	regdate datetime not null,
+	img text null,
+	title varchar(255) not null,
+	note text null,
+	viewCount int(11) unsigned not null default 0,
+	station text null,
+	signdate datetime not null,
+	maxPeople int(11) unsigned not null,
+	enabled tinyint(1) not null default false
+);
+
+# 스터디 수강(참여) 
+create table hs_study_regist (
+	idx int(11) unsigned not null auto_increment primary key,
+	studyIdx int(11) unsigned not null,
+	userIdx int(11) unsigned not null,
+	regdate datetime not null
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -->

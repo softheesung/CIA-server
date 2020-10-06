@@ -1,0 +1,50 @@
+/* 도현체 */
+@font-face {
+  font-family: 'BMDOHYEON_ttf';
+  src: url('BMDOHYEON_ttf.eot');
+  src: url('BMDOHYEON_ttf.woff2') format('woff2'),
+       url('BMDOHYEON_ttf.eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BMDoHyeon';
+  src: url('BMDoHyeon.woff') format('woff'),
+       url('BMDoHyeon.ttf') format('truetype'),
+       url('BMDoHyeon.svg#BMDoHyeon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 한나체 */
+@font-face {
+  font-family: 'BMHANNA11yrsold';
+  src: url('BMHANNA11yrsold.woff') format('woff'),
+       url('BMHANNA11yrsold.ttf') format('truetype'),
+       url('BMHANNA11yrsold.svg#BMHANNA11yrsold') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BMHANNA_11yrs_ttf';
+  src: url('BMHANNA_11yrs_ttf.eot');
+  src: url('BMHANNA_11yrs_ttf.woff2') format('woff2'),
+       url('BMHANNA_11yrs_ttf.eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+/* 주아체 */
+@font-face {
+    font-family: 'bm_jua_ttfregular';
+    src: url('bmjua_ttf-webfont.woff2') format('woff2'),
+         url('bmjua_ttf-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+} 
+.font_dohyeon { font-family: 'BMDoHyeon'; }
+.font_hanna { font-family: 'BMHANNA_11yrs_ttf','Noto Sans'; }
+.font_noto { font-family: 'Noto Sans'; }  
+.color_yellow { color: #ffef80; }
+    
