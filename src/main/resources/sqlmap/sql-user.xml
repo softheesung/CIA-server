@@ -4,13 +4,13 @@
 	
 	
 	<select id="getStudy" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.StudyInfo">
-		selete * from hs_study_info where idx = #{idx}
+		select * from hs_study_info where idx = #{idx}
 	</select>
 	
 	<!-- 스터디 삭제 -->
 	<delete id="deleteStudy" parameterType="java.lang.Integer">
-		delete from hs_study_info where idx = #{idx}
-	</delete>
+		delete from hs_study_info where idx = #{idx}   
+	</delete>   
 	
 	<!-- 스터디 수정 -->
 	<update id="updateStudy" parameterType="com.hs.app.user.vo.StudyInfo">
@@ -50,7 +50,7 @@
 		where
 			enabled = true
 		order by
-            b.idx desc 
+            idx desc 
         limit 
             #{startRow}, #{rowBlockCount}
 	</select>
@@ -352,6 +352,13 @@ scp -r ./src/main/webapp/backup/cia777/theme cia777@cia777.cafe24.com:/home/host
 scp -r ./src/main/webapp/backup/cia777/WEB-INF/web.xml cia777@cia777.cafe24.com:/home/hosting_users/cia777/tomcat/webapps/ROOT/WEB-INF/
 
 scp -r ./src/main/webapp/backup/cia777/WEB-INF/classes/log4j.xml cia777@cia777.cafe24.com:/home/hosting_users/cia777/tomcat/webapps/ROOT/WEB-INF/classes
+
+
+
+insert into hs_study_info (userIdx, regdate, img, title, note, station, signdate, maxPeople)
+values(1,now(), 'https://imgnews.pstatic.net/image/009/2020/10/06/0004669238_001_20201006231812936.jpg?type=w647', '2년만에 노출된 北조성길…남북관계 파장예고', '2018년 11월 망명한 조성길 전 주이탈리아 북한 대사대리가 한국에 거주하고 있는 것으로 알려졌다. 조 전 대사는 황장엽 대남비서 이후 북한 최고위급의 한국행이어서 남북 관계에도 적잖은 파장이 일 것으로 보인다. 특히 조 전 대사는 업무 특성상 북한 최고 권력층인 김정은 국무위원장과 로열 패밀리의 사치품 루트도 알고 있다는 관측이 제기된 바 있다.', '대전 서구 둔산동', now(), 10);
+
+
 
 -->
 	
