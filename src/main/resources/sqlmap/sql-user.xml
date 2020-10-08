@@ -38,9 +38,20 @@
 		select idx from hs_study_info where title = #{title} and userIdx = #{userIdx} order by idx desc limit 1 
 	</select>
 	
+	<update id="increaseViewOfStudy" parameterType="java.lang.Integer">
+		update hs_study_info set viewCount = viewCount + 1 where idx = #{idx}
+	</update>
+	
 	<!-- 스터리 목록 쿼리 -->
-	<select id="getStudySize" resultType="java.lang.Integer">
+	<select id="getStudySize" parameterType="java.util.Map" resultType="java.lang.Integer">
 		select count(*) from hs_study_info where enabled = true
+		<if test="q != null">
+            and ( 
+	            	title LIKE CONCAT('%', #{q}, '%')  or 
+	            	note LIKE CONCAT('%', #{q}, '%') or 
+	            	tags LIKE CONCAT('%', #{q}, '%') 
+            	)
+        </if>
 	</select>
 	<select id="loadStudy" parameterType="java.util.Map" resultType="com.hs.app.user.vo.StudyInfo">
 		select 
@@ -49,6 +60,13 @@
 			hs_study_info 
 		where
 			enabled = true
+		<if test="q != null">
+            and ( 
+	            	title LIKE CONCAT('%', #{q}, '%')  or 
+	            	note LIKE CONCAT('%', #{q}, '%') or 
+	            	tags LIKE CONCAT('%', #{q}, '%') 
+            	)
+        </if>	
 		order by
             idx desc 
         limit 
@@ -355,10 +373,46 @@ scp -r ./src/main/webapp/backup/cia777/WEB-INF/classes/log4j.xml cia777@cia777.c
 
 
 
-insert into hs_study_info (userIdx, regdate, img, title, note, station, signdate, maxPeople)
-values(1,now(), 'https://imgnews.pstatic.net/image/009/2020/10/06/0004669238_001_20201006231812936.jpg?type=w647', '2년만에 노출된 北조성길…남북관계 파장예고', '2018년 11월 망명한 조성길 전 주이탈리아 북한 대사대리가 한국에 거주하고 있는 것으로 알려졌다. 조 전 대사는 황장엽 대남비서 이후 북한 최고위급의 한국행이어서 남북 관계에도 적잖은 파장이 일 것으로 보인다. 특히 조 전 대사는 업무 특성상 북한 최고 권력층인 김정은 국무위원장과 로열 패밀리의 사치품 루트도 알고 있다는 관측이 제기된 바 있다.', '대전 서구 둔산동', now(), 10);
+insert into hs_study_info (userIdx, regdate, img, title, note, station, signdate, maxPeople, tags)
+values(1,now(), 
+'http://cia777.cafe24.com/resources/img/1.jfif', 
+'협상과 계약을 위한 고급 영어! Classy한 법률 영어 클래스', 
+'협상/계약/컨퍼런스 등을 담당하는 직장인 및 비즈니스 오너들을 위한 클래스입니다.', 
+'대전 서구 둔산동', 
+now(), 12, '법률,협상,계약');
+
+insert into hs_study_info (userIdx, regdate, img, title, note, station, signdate, maxPeople, tags)
+values(1,now(), 
+'http://cia777.cafe24.com/resources/img/2.png', 
+'바닥부터 시작하는 디자인 UX/UI 전문가', 
+'서비스를 이용할 때 무엇을 필요로 하는지, 어떤 것을 경험하는지, 그 과정에서 불편함을 느끼지는 않는지 사용자 관점에서의 서비스 경험을 구상하고 고안, 개선하는 작업이 바로 UX 디자인이죠.', 
+'대전 서구 둔산동', 
+now(), 7, '디자인,UI,UX');
 
 
+insert into hs_study_info (userIdx, regdate, img, title, note, station, signdate, maxPeople, tags)
+values(1,now(), 
+'http://cia777.cafe24.com/resources/img/3.jfif', 
+'스마트스토어로 월 100만원 만들기, 평범한 사람이 돈을 만드는 비법', 
+'장사를 한번도 해본 적 없는 사람이, 월 1000만 원에 가까운 소득을 올렸습니다. 그 사람은 어떻게 성공할 수 있었을까요? 투자금이 많아서? SNS 유명인사여서? 아니면 단순히 운이 좋았기 때문에?', 
+'대전 서구 둔산동', 
+now(), 4, '창업,스마트스토어,IT');
+
+insert into hs_study_info (userIdx, regdate, img, title, note, station, signdate, maxPeople, tags)
+values(1,now(), 
+'http://cia777.cafe24.com/resources/img/4.jfif', 
+'NOMA와 함께하는 따뜻하고 짙은 불투명 수채화', 
+'한 작품을 만들어보는 데에 1~5시간 정도가 소요됩니다.', 
+'대전 서구 둔산동', 
+now(), 14, '미술,수채화,그림');
+
+insert into hs_study_info (userIdx, regdate, img, title, note, station, signdate, maxPeople, tags)
+values(1,now(), 
+'http://cia777.cafe24.com/resources/img/5.jfif', 
+'미술이 처음인 당신을 위해, 4개의 명화로 시작하는 컬러링 클래스', 
+'커다란 물통, 플라스틱 팔레트, 특수 세척통과 같은 도구의 세팅 없이 직관적으로 대상을 효율 있게 표현하도록 돕는 색연필은, 무지갯빛으로 나란히 놓여있는 모습만 보아도 누구든 쉽게 반가이 맞이할 수 있는 아주 친근한 재료이지요. 그만큼 쉽게 다가가서 무한대의 표현을 화폭에 담을 수 있는 고마운 친구입니다.', 
+'대전 서구 둔산동', 
+now(), 6, '미술,컬러링,그림');
 
 -->
 	

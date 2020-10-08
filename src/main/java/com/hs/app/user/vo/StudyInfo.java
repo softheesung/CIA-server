@@ -13,9 +13,10 @@ public class StudyInfo {
 	private Integer maxPeople;
 	private boolean enabled;
 	private String title;
+	private String tags;
 	
 	public StudyInfo() {}
-	public StudyInfo(int userIdx, String title, String note, String img, String station, String signdate, int maxPeople) {
+	public StudyInfo(int userIdx, String title, String note, String img, String station, String signdate, int maxPeople, String tags) {
 		this.userIdx = userIdx;
 		this.title = title;
 		this.note = note;
@@ -26,6 +27,13 @@ public class StudyInfo {
 	}
 	
 	
+	
+	public String getTags() {
+		return tags;
+	}
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
 	public String getTitle() {
 		return title;
 	}

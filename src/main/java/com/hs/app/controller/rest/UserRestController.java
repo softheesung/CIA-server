@@ -59,7 +59,7 @@ public class UserRestController {
 스터디 가입: /api/study/{스터디PK}/students [POST][Authorization]
 스터디 탈퇴: /api/study/{스터디PK}/students [POST][Authorization]
 
-
+스터디 조회수+1: /study/{studyIdx}/views [PUT] 
 	
 */
 
@@ -154,6 +154,14 @@ public class UserRestController {
 		
 	}
 	
+	/** 스터디 조회수 증가 */
+	@RequestMapping(value = "/study/{studyIdx}/views", method = RequestMethod.PUT)
+	public void incS(@PathVariable Integer studyIdx,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		userDao.increaseViewOfStudy(studyIdx);
+	}
+
 	/** 스터디 수정 */
 	@RequestMapping(value = "/study/{studyIdx}", method = RequestMethod.PUT)
 	public void updateStudy(
@@ -197,12 +205,13 @@ public class UserRestController {
 			@RequestParam String station,
 			@RequestParam String signdate,
 			@RequestParam Integer maxPeople,
+			@RequestParam String tags,
 			HttpServletRequest request, HttpServletResponse response) {
 		
 		String token = request.getAttribute("HSID").toString();
 		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
 		
-		StudyInfo studyInfo = new StudyInfo(userIdx, title, note, img, station, signdate, maxPeople);
+		StudyInfo studyInfo = new StudyInfo(userIdx, title, note, img, station, signdate, maxPeople, tags);
 		if(userDao.insertStudy(studyInfo)) {
 			int idx = userDao.getInsertedStudyIdx(studyInfo);
 			Map<String,Object> result = new HashMap<String,Object>();
@@ -229,15 +238,16 @@ public class UserRestController {
 	/** 스터디 목록 쿼리 */
 	@RequestMapping(value = "/study", method = RequestMethod.GET)
 	public Map<String, Object> loadStudy(
-			@RequestParam Integer page,
-			@RequestParam Integer rowBlockCount,
+			@RequestParam(required = false) Integer page,
+			@RequestParam(required = false) String q,
+			@RequestParam(required = false) Integer rowBlockCount,
 			HttpServletRequest request, HttpServletResponse response) {
 		
 		page = page==null?1:page;
 		rowBlockCount = rowBlockCount==null?15:(rowBlockCount>50||rowBlockCount<2)?15:rowBlockCount;
 		
 		Map<String,Object> rst = new HashMap<String,Object>();
-		rst = userService.loadStudy(page, rowBlockCount);
+		rst = userService.loadStudy(page, rowBlockCount, q);
 	
 		response.setStatus(HttpServletResponse.SC_OK);
 		return rst;

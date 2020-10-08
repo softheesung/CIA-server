@@ -31,10 +31,10 @@ public class UserService {
 	
 	
 	
-	public Map<String,Object> loadStudy(int page, int rowBlockCount) {
+	public Map<String,Object> loadStudy(int page, int rowBlockCount, String q) {
         page = page<1?1:page;   
-        PageUtil pu = new PageUtil(page,userDao.getStudySize(),rowBlockCount,10);			
-		List<StudyInfo> lists = userDao.loadStudy(pu.getStartRow(), pu.getRowBlockCount());		
+        PageUtil pu = new PageUtil(page,userDao.getStudySize(q),rowBlockCount,10);			
+		List<StudyInfo> lists = userDao.loadStudy(pu.getStartRow(), pu.getRowBlockCount(), q);		
         Map<String,Object> rst = new HashMap<String,Object>();
 		rst.put("pageNav", pu);
 		rst.put("list", lists);

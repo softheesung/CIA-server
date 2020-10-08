@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.hs.common.support.SiteInfo;
 import com.hs.common.support.SupportLog;
 
 public class GeneralUtil {

@@ -48,17 +48,24 @@ public class UserDao extends SqlSessionDaoSupport {
 		return false;
 	}
 	
+	public void increaseViewOfStudy(int idx) {
+		getSqlSession().update("user.increaseViewOfStudy", idx);
+	}
+	
 	public int getInsertedStudyIdx(StudyInfo studyInfo) {
 		return getSqlSession().selectOne("user.getInsertedStudyIdx", studyInfo);
 	}
 	
-	public int getStudySize() {
-		return getSqlSession().selectOne("user.getStudySize");
+	public int getStudySize(String q) {
+		Map<String,Object> pMap = new HashMap<String,Object>();
+		pMap.put("q", q);
+		return getSqlSession().selectOne("user.getStudySize",pMap);
 	}
 	
-	public List<StudyInfo> loadStudy(int startRow, int rowBlockCount) {
+	public List<StudyInfo> loadStudy(int startRow, int rowBlockCount, String q) {
 		Map<String,Object> pMap = new HashMap<String,Object>();
 		pMap.put("startRow", startRow);
+		pMap.put("q", q);
 		pMap.put("rowBlockCount", rowBlockCount);
 		return getSqlSession().selectList("user.loadStudy", pMap);
 	}
