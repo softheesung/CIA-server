@@ -85,6 +85,39 @@ create table hs_study_regist (
 
 
 
+클래스 정보
+create table hs_class_info (
+	idx int(11) unsigned not null auto_increment primary key,
+	userIdx int(11) unsigned not null comment 'user idx',
+	regdate datetime not null,
+	img text null comment 'thumbnail image',
+	enabled tinyint(1) not null default true,
+	title text null,
+	note text null,
+	viewCount int(11) unsigned not null default 0,
+	catIdx int(11) unsigned not null,
+	tags text null
+);
+
+클래스 카테고리
+create table hs_class_cat (
+	idx int(11) unsigned not null auto_increment primary key,
+	name varchar(30) not null
+);
+
+클래스 회차정보
+create table hs_class_curriculum (
+	idx int(11) unsigned not null auto_increment primary key,
+	classIdx int(11) unsigned not null,
+	regdate datetime not null,
+	numb int(11) unsigned not null comment 'class ordering number',
+	title varchar(100) not null,
+	note text null,
+	viewCount int(11) unsigned not null default 0,
+	videoPath text null,,
+	videoSeconds int(11) unsigned not null,
+	thumbnail text null comment 'thumbnail image'
+);
 
 
 

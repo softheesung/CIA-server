@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.hs.app.jwt.service.JwtService;
 import com.hs.app.jwt.vo.JwtUser;
 import com.hs.app.user.dao.UserDao;
+import com.hs.app.user.vo.ClassInfo;
 import com.hs.app.user.vo.StudyInfo;
 import com.hs.app.user.vo.UserInfo;
 import com.hs.common.util.CookieUtil;
@@ -29,7 +30,24 @@ public class UserService {
 	@Autowired private UserDao userDao;
 	@Autowired private JwtService jwtService;
 	
-	
+	public Map<String,Object> loadClass(int page, int rowBlockCount, String q) {
+		
+        page = page<1?1:page;   
+        PageUtil pu = new PageUtil(page,userDao.getClassSize(q),rowBlockCount,10);		
+        
+        if(q!=null) {
+        	q = q.trim();
+        	if(q=="") {
+        		q = null;
+        	}
+        }
+        
+		List<ClassInfo> lists = userDao.loadClass(pu.getStartRow(), pu.getRowBlockCount(), q);		
+        Map<String,Object> rst = new HashMap<String,Object>();
+		rst.put("pageNav", pu);
+		rst.put("list", lists);
+        return rst;
+    }
 	
 	public Map<String,Object> loadStudy(int page, int rowBlockCount, String q) {
 		

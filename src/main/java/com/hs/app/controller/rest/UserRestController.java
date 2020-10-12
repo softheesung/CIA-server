@@ -24,6 +24,8 @@ import com.hs.app.board.dao.BoardDao;
 import com.hs.app.jwt.service.JwtService;
 import com.hs.app.user.dao.UserDao;
 import com.hs.app.user.service.UserService;
+import com.hs.app.user.vo.ClassCat;
+import com.hs.app.user.vo.ClassInfo;
 import com.hs.app.user.vo.StudyCat;
 import com.hs.app.user.vo.StudyInfo;
 import com.hs.app.user.vo.StudyStudent;
@@ -42,12 +44,19 @@ public class UserRestController {
 	@Autowired private BCryptPasswordEncoder passwordEncoder;
 
 /**
+ * 
+ * 
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
 	
 사진업로드: /file/upload [POST]
 
 로그인: /api/users/signin [POST] 요청[email,password] 응답헤더[HSID]
 회원가입: 	/api/users/signup [POST] 요청[name,email,phonenm,password]
 프로필정보 가져오기: /api/users/profile [POST][Authorization] 응답[user(idx,password,name,phonenm,regdate,img)]
+
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
 
 스터디등록: /api/study/regist [POST][Authorization] 요청[title,img,note,station,signdate,maxPeople,catIdx] 응답[insertedIdx]
 스터디목록 가져오기: /api/study/ [GET] 요청[page,rowBlockCount(1페이지당 가져올 컨텐츠수)] 응답[list,pageNav(페이징정보)]
@@ -62,10 +71,185 @@ public class UserRestController {
 스터디 가입: /api/study/{스터디PK}/students [POST][Authorization]
 스터디 탈퇴: /api/study/{스터디PK}/students [POST][Authorization]
 
-스터디 조회수+1: /study/{studyIdx}/views [PUT] 
+스터디 조회수+1: /api/study/{studyIdx}/views [PUT]
+
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+
+클래스 정보조회 			/api/class/{classIdx} 		[GET]
+클래스 카테고리 목록조회 	/api/class/cat 				[GET] 
+클래스 추천 목록조회 		/api/class/recommend 		[GET] 요청[limitCount]
+클래스 목록조회 			/api/class 					[GET] 요청[page, rowBlockCount, q]
+
+클래스 삭제 			/api/class/{classIdx} 		[DELETE] 
+클래스 등록				/api/class/regist	 		[POST] 요청[img, title, note, tags, catIdx] 응답[insertedIdx]
+클래스 수정 			/api/class/{classIdx} 		[PUT] 요청[img, title, note, tags, catIdx]
+클래스 조회수+1: 		/api/class/{classIdx}/views [PUT]
+
+
+
+
+-------------------------------------------------------------------------------------------
+
+
+ 
+ 
 	
 */
-
+	/** 클래스 조회수 증가 */
+	@RequestMapping(value = "/class/{classIdx}/views", method = RequestMethod.PUT)
+	public void insc123(@PathVariable Integer classIdx, HttpServletRequest request, HttpServletResponse response) {
+		userDao.increaseViewOfClass(classIdx);
+	}
+	/** 클래스 수정 */
+	@RequestMapping(value = "/class/{classIdx}", method = RequestMethod.PUT)
+	public void updateClass(
+			@PathVariable Integer classIdx,
+			@RequestParam(required = false) String img,
+			@RequestParam(required = false) String title,
+			@RequestParam(required = false) String note,
+			@RequestParam(required = false) String tags,
+			@RequestParam(required = false) Integer catIdx,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		String token = request.getAttribute("HSID").toString();
+		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
+		
+		ClassInfo classInfo = userDao.getClassInfo(classIdx);
+		if(classInfo.getUserIdx() != userIdx) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
+		if(img!=null) classInfo.setImg(img);
+		if(title!=null) classInfo.setTitle(title);
+		if(note!=null) classInfo.setNote(note);
+		if(tags!=null) classInfo.setTags(tags);
+		if(catIdx!=null) classInfo.setCatIdx(catIdx);
+		
+		if(!userDao.updateClass(classInfo)) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		}
+	}
+	/** 클래스 등록 */
+	@RequestMapping(value = "/class/regist", method = RequestMethod.POST)
+	public Map<String,Object> insertClass(
+			@RequestParam(required = false) String img,
+			@RequestParam(required = false) String title,
+			@RequestParam(required = false) String note,
+			@RequestParam(required = false) String tags,
+			@RequestParam(required = false) Integer catIdx,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		String token = request.getAttribute("HSID").toString();
+		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
+		
+		ClassInfo classInfo = new ClassInfo(userIdx, img, title, note, tags, catIdx);
+		if(userDao.insertClass(classInfo)) {
+			int idx = userDao.getInsertedClassIdx(classInfo);
+			Map<String,Object> result = new HashMap<String,Object>();
+			result.put("insertedIdx", idx); // 방금 등록된 Row PK values
+			return result;
+		}
+		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		return null;
+	}
+	/** 클래스 삭제 */
+	@RequestMapping(value = "/class/{classIdx}", method = RequestMethod.DELETE)
+	public void deleteClass(@PathVariable Integer classIdx, HttpServletRequest request, HttpServletResponse response) {
+		
+		String token = request.getAttribute("HSID").toString();
+		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
+		
+		ClassInfo classInfo = userDao.getClassInfo(classIdx);
+		if(classInfo!=null && classInfo.getUserIdx() == userIdx) {
+			if(!userDao.deleteClass(classIdx)) {
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			}else {
+				response.setStatus(HttpServletResponse.SC_OK);
+			}
+			return;
+		}
+		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+	}
+	/** 클래스 정보 조회 */
+	@RequestMapping(value = "/class/{classIdx}", method = RequestMethod.GET)
+	public Map<String, Object> getCalssInfomation(
+			@PathVariable Integer classIdx,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		Map<String,Object> rst = new HashMap<String,Object>();
+		ClassInfo classInfo = userDao.getClassInfo(classIdx);
+		rst.put("info", classInfo);
+		return rst;
+	}
+	/** 클래스 카테고리 목록 쿼리 */
+	@RequestMapping(value = "/class/cat", method = RequestMethod.GET)
+	public Map<String, Object> loadClassCat(HttpServletRequest request, HttpServletResponse response) {
+		Map<String,Object> rst = new HashMap<String,Object>();
+		List<ClassCat> l = userDao.getClassCatList();
+		rst.put("lists", l);
+		response.setStatus(HttpServletResponse.SC_OK);
+		return rst;
+	}
+	/** 추천 강의 목록 로드 */
+	@RequestMapping(value = "/class/recommend", method = RequestMethod.GET)
+	public Map<String, Object> loadClassReco(
+			@RequestParam(required = false) Integer limitCount,
+			HttpServletRequest request, HttpServletResponse response) {
+		Map<String,Object> rst = new HashMap<String,Object>();
+		List<ClassInfo> l = userDao.getRecoClassList(limitCount);
+		rst.put("lists", l);
+		return rst;
+	}
+	/** 클래스 목록 */
+	@RequestMapping(value = "/class", method = RequestMethod.GET)
+	public Map<String, Object> loadClass(
+			@RequestParam(required = false) Integer page,
+			@RequestParam(required = false) String q,
+			@RequestParam(required = false) Integer rowBlockCount,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		page = page==null?1:page;
+		rowBlockCount = rowBlockCount==null?15:(rowBlockCount>50||rowBlockCount<2)?15:rowBlockCount;
+		
+		Map<String,Object> rst = new HashMap<String,Object>();
+		rst = userService.loadClass(page, rowBlockCount, q);
+	
+		response.setStatus(HttpServletResponse.SC_OK);
+		return rst;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/** 회원 로그인 */
@@ -168,12 +352,12 @@ public class UserRestController {
 	/** 스터디 수정 */
 	@RequestMapping(value = "/study/{studyIdx}", method = RequestMethod.PUT)
 	public void updateStudy(
-			@RequestParam String img,
-			@RequestParam String title,
-			@RequestParam String note,
-			@RequestParam String station,
-			@RequestParam String signdate,
-			@RequestParam Integer maxPeople,
+			@RequestParam(required = false) String img,
+			@RequestParam(required = false) String title,
+			@RequestParam(required = false) String note,
+			@RequestParam(required = false) String station,
+			@RequestParam(required = false) String signdate,
+			@RequestParam(required = false) Integer maxPeople,
 			@PathVariable Integer studyIdx,
 			HttpServletRequest request, HttpServletResponse response) {
 		
@@ -251,8 +435,8 @@ public class UserRestController {
 		return rst;
 	}
 	
-	/** 추천 강의 목록 로드 */
-	@RequestMapping(value = "/study/recomend", method = RequestMethod.GET)
+	/** 추천 스터디 목록 로드 */
+	@RequestMapping(value = "/study/recommend", method = RequestMethod.GET)
 	public Map<String, Object> loadStudyReco(
 			@RequestParam(required = false) Integer limitCount,
 			HttpServletRequest request, HttpServletResponse response) {

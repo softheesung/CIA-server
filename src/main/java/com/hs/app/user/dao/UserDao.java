@@ -8,6 +8,8 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.hs.app.user.vo.ClassCat;
+import com.hs.app.user.vo.ClassInfo;
 import com.hs.app.user.vo.StudyCat;
 import com.hs.app.user.vo.StudyInfo;
 import com.hs.app.user.vo.StudyStudent;
@@ -16,6 +18,81 @@ import com.hs.app.user.vo.UserInfo;
 public class UserDao extends SqlSessionDaoSupport {
 	
 	@Autowired private BCryptPasswordEncoder passwordEncoder;
+	
+	
+	public void increaseViewOfClass(int idx) {
+		getSqlSession().update("user.increaseViewOfClass", idx);
+	}
+	
+	public boolean deleteClass(Integer idx) {
+		Integer r =  getSqlSession().delete("user.deleteClass", idx);
+		if(r!=null && r > 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean updateClass(ClassInfo classInfo) {
+		Integer r =  getSqlSession().update("user.updateClass", classInfo);
+		if(r!=null && r > 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean insertClass(ClassInfo classInfo) {
+		Integer r = getSqlSession().insert("user.insertClass", classInfo);
+		if(r != null && r > 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public Integer getInsertedClassIdx(ClassInfo classInfo) {
+		return getSqlSession().selectOne("user.getInsertedClassIdx", classInfo);
+	}
+	
+	public ClassInfo getClassInfo(Integer idx) {
+		return getSqlSession().selectOne("user.getClassInfo", idx); 
+	}
+	
+	public List<ClassInfo> getRecoClassList(Integer limitCount) {
+		Map<String,Object> pMap = new HashMap<String,Object>();
+		pMap.put("limitCount", limitCount);
+		return getSqlSession().selectList("user.getRecoClassList", pMap);
+	}
+	
+	public List<ClassCat> getClassCatList() {
+		return getSqlSession().selectList("user.getClassCatList");
+	}
+	
+	public int getClassSize(String q) {
+		Map<String,Object> pMap = new HashMap<String,Object>();
+		pMap.put("q", q);
+		return getSqlSession().selectOne("user.getClassSize",pMap);
+	}
+	
+	public List<ClassInfo> loadClass(int startRow, int rowBlockCount, String q) {
+		Map<String,Object> pMap = new HashMap<String,Object>();
+		pMap.put("startRow", startRow);
+		pMap.put("q", q);
+		pMap.put("rowBlockCount", rowBlockCount);
+		return getSqlSession().selectList("user.loadClass", pMap);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public List<StudyInfo> getRecoStudyList(Integer limitCount) {
 		Map<String,Object> pMap = new HashMap<String,Object>();

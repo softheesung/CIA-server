@@ -3,6 +3,111 @@
 <mapper namespace="user">	
 
 	
+	<update id="increaseViewOfClass" parameterType="java.lang.Integer">
+		update hs_class_info set viewCount = viewCount + 1 where idx = #{idx}
+	</update>
+	<!-- 클래스 삭제 -->
+	<delete id="deleteClass" parameterType="java.lang.Integer">
+		delete from hs_class_info where idx = #{idx}   
+	</delete>   
+	
+	<!-- 클래스 수정 -->
+	<update id="updateClass" parameterType="com.hs.app.user.vo.ClassInfo">
+		update 
+			hs_class_info
+		set
+			img = #{img},
+			title = #{title},
+			note = #{note},
+			tags = #{tags},
+			catIdx = #{catIdx}
+		where
+			idx = #{idx}
+	</update>
+	
+	<!-- 클래스 등록 -->
+	<insert id="insertClass" parameterType="com.hs.app.user.vo.ClassInfo">
+		insert into hs_class_info 
+			(userIdx, regdate, img, enabled, title, note, viewCount, catIdx, tags)
+		values
+			(#{userIdx}, now(), #{img}, #{enabled}, #{title}, #{note}, #{viewCount}, #{catIdx}, #{tags})
+	</insert>
+	<!-- 방금 등록한 클래스 고유번호 쿼리 -->
+	<select id="getInsertedClassIdx" parameterType="com.hs.app.user.vo.ClassInfo" resultType="java.lang.Integer">
+		select idx from hs_class_info where title = #{title} and userIdx = #{userIdx} order by idx desc limit 1 
+	</select>
+	
+	<select id="getClassInfo" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.ClassInfo">
+		select * from hs_class_info where idx = #{idx}
+	</select> 
+
+	<select id="getClassCatList" resultType="com.hs.app.user.vo.ClassCat">
+		select * from hs_class_cat order by idx asc
+	</select>
+	
+	<select id="getRecoClassList" parameterType="java.util.Map" resultType="com.hs.app.user.vo.ClassInfo">
+		select 
+			idx, userIdx, regdate, img, enabled, title, note, viewCount, catIdx, tags,
+			(select name from hs_user_info where idx = a.userIdx) as userName,
+			(select name from hs_study_cat where idx = a.catidx) as catName
+		from
+			hs_class_info as a
+		where
+			enabled = true
+		order by
+			rand()
+		<if test="limitCount == null">
+			limit 30
+		</if>
+		<if test="limitCount != null">
+			limit #{limitCount}
+		</if>
+		
+	</select>
+	<select id="getClassSize" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from hs_class_info where enabled = true
+		<if test="q != null">
+            and ( 
+	            	title LIKE CONCAT('%', #{q}, '%')  or 
+	            	note LIKE CONCAT('%', #{q}, '%') or 
+	            	tags LIKE CONCAT('%', #{q}, '%') 
+            	)
+        </if>
+	</select>
+	<select id="loadClass" parameterType="java.util.Map" resultType="com.hs.app.user.vo.ClassInfo">
+		select 
+			idx, userIdx, regdate, img, enabled, title, note, viewCount, catIdx, tags,
+			(select name from hs_user_info where idx = hs_class_info.userIdx) as userName,
+			(select name from hs_class_cat where idx = hs_class_info.catIdx) as catName
+		from
+			hs_class_info 
+		where 
+			enabled = true
+		<if test="q != null">
+            and ( 
+	            	title LIKE CONCAT('%', #{q}, '%')  or 
+	            	note LIKE CONCAT('%', #{q}, '%') or 
+	            	tags LIKE CONCAT('%', #{q}, '%') 
+            	)
+        </if>	
+		order by
+            idx desc 
+        limit 
+            #{startRow}, #{rowBlockCount}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	<select id="getStudyCatList" resultType="com.hs.app.user.vo.StudyCat">
 		select * from hs_study_cat order by idx asc
 	</select>
