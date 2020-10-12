@@ -78,12 +78,8 @@
 		<mvc:interceptor>      	          
 		           
 			<mvc:mapping path="/coldbrew/**"/>
-<!-- 			<mvc:mapping path="/api/**"/>  -->
-			
+			<mvc:mapping path="/api/**"/> 
 		
-			
-			<mvc:exclude-mapping path="/api/users/albas-order-favorite"/>
-			<mvc:exclude-mapping path="/api/users/albas"/>
 			<mvc:exclude-mapping path="/api/users/check/name"/>
 			<mvc:exclude-mapping path="/api/users/signup"/>
 			    

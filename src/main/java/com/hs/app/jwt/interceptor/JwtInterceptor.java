@@ -28,18 +28,19 @@ public class JwtInterceptor implements HandlerInterceptor {
 		
 		final String token = request.getHeader(HEADER_AUTH);// api형식 로그인의 경우에 사용..	
 //		final String token = CookieUtil.getCookie("HSID", request);
-		System.out.println("JwtInterceptor::TK=>"+token);
+//		System.out.println("JwtInterceptor::TK=>"+token);
 		
 		if(token != null && jwtService.isUsable(token)){
-//			System.out.println("사용가능.."+token);
+			System.out.println("사용가능.."+token);
+//			System.out.println("JwtInterceptor::TK=>"+token);
 			request.setAttribute("HSID", token);
 			return true;
 		}else{
-//			System.out.println("사용불가.."+token);
+			System.out.println("사용불가.."+token);
 			request.setAttribute("HSID", null);
 //			response.sendRedirect("/signin");
-//			return false;
-			throw new UnauthorizedException();
+			return true;
+//			throw new UnauthorizedException();
 		}
 	}
 

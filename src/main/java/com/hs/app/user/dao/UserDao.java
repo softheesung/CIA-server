@@ -8,17 +8,24 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.hs.app.user.vo.StudyCat;
 import com.hs.app.user.vo.StudyInfo;
 import com.hs.app.user.vo.StudyStudent;
-import com.hs.app.user.vo.UserAlba;
 import com.hs.app.user.vo.UserInfo;
-import com.hs.app.user.vo.UserNotice;
 
 public class UserDao extends SqlSessionDaoSupport {
 	
 	@Autowired private BCryptPasswordEncoder passwordEncoder;
 	
+	public List<StudyInfo> getRecoStudyList(Integer limitCount) {
+		Map<String,Object> pMap = new HashMap<String,Object>();
+		pMap.put("limitCount", limitCount);
+		return getSqlSession().selectList("user.getRecoStudyList", pMap);
+	}
 	
+	public List<StudyCat> getStudyCatList() {
+		return getSqlSession().selectList("user.getStudyCatList");
+	}
 	
 	public StudyInfo getStudy(int idx) {
 		return getSqlSession().selectOne("user.getStudy", idx);

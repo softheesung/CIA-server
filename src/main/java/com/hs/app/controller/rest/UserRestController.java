@@ -24,10 +24,10 @@ import com.hs.app.board.dao.BoardDao;
 import com.hs.app.jwt.service.JwtService;
 import com.hs.app.user.dao.UserDao;
 import com.hs.app.user.service.UserService;
+import com.hs.app.user.vo.StudyCat;
 import com.hs.app.user.vo.StudyInfo;
 import com.hs.app.user.vo.StudyStudent;
 import com.hs.app.user.vo.UserInfo;
-import com.hs.common.util.CookieUtil;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -49,11 +49,14 @@ public class UserRestController {
 회원가입: 	/api/users/signup [POST] 요청[name,email,phonenm,password]
 프로필정보 가져오기: /api/users/profile [POST][Authorization] 응답[user(idx,password,name,phonenm,regdate,img)]
 
-스터디등록: /api/study/ [POST][Authorization] 요청[title,img,note,station,signdate,maxPeople] 응답[insertedIdx]
+스터디등록: /api/study/regist [POST][Authorization] 요청[title,img,note,station,signdate,maxPeople,catIdx] 응답[insertedIdx]
 스터디목록 가져오기: /api/study/ [GET] 요청[page,rowBlockCount(1페이지당 가져올 컨텐츠수)] 응답[list,pageNav(페이징정보)]
 스터디수정: /api/study/{스터디PK} [PUT][Authorization] 요청[title,img,note,station,signdate,maxPeople]
 스터디삭제: /api/study/{스터디PK} [DELETE][Authorization] 
 스터디상세정보 가져오기: /api/study/{스터디PK} [GET] 응답[idx,title,img,note,station,signdate,maxPeople]
+
+스터디카테고리목록 가져오기: /api/study/cat [GET] 
+스터디 추천목록 가져오기 /api/study/recomend [GET] 요청[limitCount(몇개 가져올지)]
 
 스터디 수강회원 목록 가져오기: /api/study/{스터디PK}/students [GET] 응답[list]
 스터디 가입: /api/study/{스터디PK}/students [POST][Authorization]
@@ -197,21 +200,22 @@ public class UserRestController {
 	}
 	
 	/** 스터디 등록 */
-	@RequestMapping(value = "/study", method = RequestMethod.POST)
+	@RequestMapping(value = "/study/regist", method = RequestMethod.POST)
 	public Map<String,Object> insertStudy(
-			@RequestParam String img,
-			@RequestParam String title,
-			@RequestParam String note,
-			@RequestParam String station,
-			@RequestParam String signdate,
-			@RequestParam Integer maxPeople,
-			@RequestParam String tags,
+			@RequestParam(required = false) String img,
+			@RequestParam(required = false) String title,
+			@RequestParam(required = false) String note,
+			@RequestParam(required = false) String station,
+			@RequestParam(required = false) String signdate,
+			@RequestParam(required = false) Integer maxPeople,
+			@RequestParam(required = false) String tags,
+			@RequestParam(required = false) Integer catIdx,
 			HttpServletRequest request, HttpServletResponse response) {
 		
 		String token = request.getAttribute("HSID").toString();
 		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
 		
-		StudyInfo studyInfo = new StudyInfo(userIdx, title, note, img, station, signdate, maxPeople, tags);
+		StudyInfo studyInfo = new StudyInfo(userIdx, title, note, img, station, signdate, maxPeople, tags, catIdx);
 		if(userDao.insertStudy(studyInfo)) {
 			int idx = userDao.getInsertedStudyIdx(studyInfo);
 			Map<String,Object> result = new HashMap<String,Object>();
@@ -232,6 +236,32 @@ public class UserRestController {
 		Map<String,Object> rst = new HashMap<String,Object>();
 		StudyInfo studyInfo = userDao.getStudy(studyIdx);
 		rst.put("info", studyInfo);
+		return rst;
+	}
+	
+	/** 스터디 카테고리 목록 쿼리 */
+	@RequestMapping(value = "/study/cat", method = RequestMethod.GET)
+	public Map<String, Object> loadStudyCat(HttpServletRequest request, HttpServletResponse response) {
+	
+		Map<String,Object> rst = new HashMap<String,Object>();
+		List<StudyCat> l = userDao.getStudyCatList();
+		rst.put("lists", l);
+	
+		response.setStatus(HttpServletResponse.SC_OK);
+		return rst;
+	}
+	
+	/** 추천 강의 목록 로드 */
+	@RequestMapping(value = "/study/recomend", method = RequestMethod.GET)
+	public Map<String, Object> loadStudyReco(
+			@RequestParam(required = false) Integer limitCount,
+			HttpServletRequest request, HttpServletResponse response) {
+	
+		Map<String,Object> rst = new HashMap<String,Object>();
+		List<StudyInfo> l = userDao.getRecoStudyList(limitCount);
+		rst.put("lists", l);
+	
+		response.setStatus(HttpServletResponse.SC_OK);
 		return rst;
 	}
 	
@@ -305,41 +335,7 @@ public class UserRestController {
 	
 	
 	
-	
-	
-	/*
-	 * 
-	 *
-	 * 
-	 * 
-	 */
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	

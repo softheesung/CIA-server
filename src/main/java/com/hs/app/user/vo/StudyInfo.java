@@ -14,9 +14,14 @@ public class StudyInfo {
 	private boolean enabled;
 	private String title;
 	private String tags;
+	private Integer catIdx;
+	private String catName;
+	private String userName;
 	
 	public StudyInfo() {}
-	public StudyInfo(int userIdx, String title, String note, String img, String station, String signdate, int maxPeople, String tags) {
+	public StudyInfo(int userIdx, String title, String note, 
+			String img, String station, String signdate, 
+			int maxPeople, String tags, Integer catIdx) {
 		this.userIdx = userIdx;
 		this.title = title;
 		this.note = note;
@@ -24,10 +29,17 @@ public class StudyInfo {
 		this.station = station;
 		this.signdate = signdate;
 		this.maxPeople = maxPeople;
+		this.catIdx = catIdx;
 	}
 	
 	
 	
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 	public String getTags() {
 		return tags;
 	}
@@ -99,6 +111,18 @@ public class StudyInfo {
 	}
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	public Integer getCatIdx() {
+		return catIdx;
+	}
+	public void setCatIdx(Integer catIdx) {
+		this.catIdx = catIdx;
+	}
+	public String getCatName() {
+		return catName;
+	}
+	public void setCatName(String catName) {
+		this.catName = catName;
 	}
 	
 	

@@ -37,11 +37,27 @@ create table hs_user_secure_pw (
 );
 
 
+# 스터디 카테고리 정보
+create table hs_study_cat (
+	idx int(11) unsigned not null auto_increment primary key,
+	name varchar(100) not null
+);
+insert into hs_study_cat (name) values('IT/Programming');
+insert into hs_study_cat (name) values('Picture');
+insert into hs_study_cat (name) values('Guitar/Music');
+insert into hs_study_cat (name) values('Travel');
+insert into hs_study_cat (name) values('Mathmatics');
+insert into hs_study_cat (name) values('Space/Science');
+insert into hs_study_cat (name) values('Cars');
+insert into hs_study_cat (name) values('Videos');
+
+
 
 # 스터디 정보
 create table hs_study_info (
 	idx int(11) unsigned not null auto_increment primary key,
 	userIdx int(11) unsigned not null,
+	catIdx int(11) unsigned not null,
 	regdate datetime not null,
 	img text null,
 	title varchar(255) not null,
@@ -52,6 +68,8 @@ create table hs_study_info (
 	maxPeople int(11) unsigned not null,
 	enabled tinyint(1) not null default false
 );
+
+alter table hs_study_info add catIdx int(11) unsigned not null;
 
 # 스터디 수강(참여) 
 create table hs_study_regist (

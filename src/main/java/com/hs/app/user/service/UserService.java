@@ -32,8 +32,17 @@ public class UserService {
 	
 	
 	public Map<String,Object> loadStudy(int page, int rowBlockCount, String q) {
+		
         page = page<1?1:page;   
-        PageUtil pu = new PageUtil(page,userDao.getStudySize(q),rowBlockCount,10);			
+        PageUtil pu = new PageUtil(page,userDao.getStudySize(q),rowBlockCount,10);		
+        
+        if(q!=null) {
+        	q = q.trim();
+        	if(q=="") {
+        		q = null;
+        	}
+        }
+        
 		List<StudyInfo> lists = userDao.loadStudy(pu.getStartRow(), pu.getRowBlockCount(), q);		
         Map<String,Object> rst = new HashMap<String,Object>();
 		rst.put("pageNav", pu);
