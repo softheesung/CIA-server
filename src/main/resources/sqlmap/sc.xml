@@ -82,7 +82,10 @@ create table hs_study_regist (
 
 
 
-
+insert into hs_class_info 
+	(userIdx,  regdate, img, title, note, catIdx, tags) 
+values
+	(1, now(), 'images', 'title', 'note', 1, 'tree,plant');
 
 
 클래스 정보
@@ -104,19 +107,27 @@ create table hs_class_cat (
 	idx int(11) unsigned not null auto_increment primary key,
 	name varchar(30) not null
 );
+insert into hs_class_cat (name) values('IT/Programming');
+insert into hs_class_cat (name) values('Picture');
+insert into hs_class_cat (name) values('Guitar/Music');
+insert into hs_class_cat (name) values('Travel');
+insert into hs_class_cat (name) values('Mathmatics');
+insert into hs_class_cat (name) values('Space/Science');
+insert into hs_class_cat (name) values('Cars');
+insert into hs_class_cat (name) values('Videos');
 
 클래스 회차정보
-create table hs_class_curriculum (
+create table hs_class_cur (
 	idx int(11) unsigned not null auto_increment primary key,
 	classIdx int(11) unsigned not null,
 	regdate datetime not null,
-	numb int(11) unsigned not null comment 'class ordering number',
+	numb int(11) unsigned not null,
 	title varchar(100) not null,
 	note text null,
 	viewCount int(11) unsigned not null default 0,
-	videoPath text null,,
+	videoPath text null,
 	videoSeconds int(11) unsigned not null,
-	thumbnail text null comment 'thumbnail image'
+	img text null
 );
 
 

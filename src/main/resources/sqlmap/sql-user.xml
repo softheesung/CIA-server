@@ -2,6 +2,43 @@
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd"> 
 <mapper namespace="user">	
 
+
+
+	<delete id="deleteCur" parameterType="java.lang.Integer">
+		delete from hs_class_cur where idx = #{idx}
+	</delete>
+	
+	<insert id="insertCur" parameterType="com.hs.app.user.vo.CurInfo">
+		insert into hs_class_cur 
+			(classIdx, regdate, numb, title, note, videoPath, videoSeconds, img)
+		values
+			(#{classIdx}, now(), #{numb}, #{title}, #{note}, #{videoPath}, #{videoSeconds}, #{img})
+	</insert>
+	
+	<select id="loadClassCurriculum" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.CurInfo">
+		select 
+			b.idx as idx,
+			b.classIdx as classIdx,
+			b.regdate as regdate,
+			b.numb as numb,
+			b.title as title,
+			b.note as note,
+			b.viewCount as viewCount,
+			b.videoPath as videoPath,
+			b.videoSeconds as videoSeconds,
+			b.img as img
+		from 
+			hs_class_info as a,
+			hs_class_cur as b
+		where 
+			a.idx = b.classIdx and b.classIdx = #{classIdx}
+		order by 
+			b.numb asc, b.idx asc 	
+			 
+	</select>
+	
+	
+
 	
 	<update id="increaseViewOfClass" parameterType="java.lang.Integer">
 		update hs_class_info set viewCount = viewCount + 1 where idx = #{idx}
@@ -339,33 +376,16 @@
 	
 	
 	
-	<update id="updateUserImgIntro" parameterType="com.hs.app.user.vo.UserInfo">
-		update hs_user_info
-		set
-			intro = #{intro},
-			img1 = #{img1},
-			img2 = #{img2},
-			img3 = #{img3},
-			img4 = #{img4}
-		where 
-			idx = #{idx}
-	</update>
 	
 	<!-- 회원 기본정보 수정 -->
-	<update id="updateUserInfo" parameterType="com.hs.app.user.vo.UserInfo">
+	<update id="updateUserInfo" parameterType="java.util.Map">
 		update hs_user_info
 		set
 			phonenm = #{phonenm},
-			moddate = now(),
-			birthdate = #{birthdate},
-			tasu = #{tasu},
-			region = #{region},
-			accountHolder = #{accountHolder},
-			accountBank = #{accountBank},
-			accountNumber = #{accountNumber}
-			<!-- name, gender -->
+			name = #{name},
+			img = #{img}
 		where
-			idx = #{idx}
+			idx = #{userIdx}
 	</update>
 
 	

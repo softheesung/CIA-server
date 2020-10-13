@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.hs.app.user.vo.ClassCat;
 import com.hs.app.user.vo.ClassInfo;
+import com.hs.app.user.vo.CurInfo;
 import com.hs.app.user.vo.StudyCat;
 import com.hs.app.user.vo.StudyInfo;
 import com.hs.app.user.vo.StudyStudent;
@@ -19,6 +20,25 @@ public class UserDao extends SqlSessionDaoSupport {
 	
 	@Autowired private BCryptPasswordEncoder passwordEncoder;
 	
+	public boolean deleteCur(int idx) {
+		Integer r =  getSqlSession().delete("user.deleteCur", idx);
+		if(r!=null && r > 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean insertCur(CurInfo curInfo) {
+		Integer r =  getSqlSession().insert("user.insertCur", curInfo);
+		if(r!=null && r > 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public List<CurInfo> loadClassCurriculum(int classIdx) {
+		return getSqlSession().selectList("user.loadClassCurriculum", classIdx);
+	}
 	
 	public void increaseViewOfClass(int idx) {
 		getSqlSession().update("user.increaseViewOfClass", idx);
@@ -216,16 +236,14 @@ public class UserDao extends SqlSessionDaoSupport {
 
 
 	
-	public boolean updateUserImgIntro(UserInfo userInfo) {
-		Integer r = getSqlSession().update("user.updateUserImgIntro", userInfo);
-		if(r != null && r > 0) {
-			return true;
-		}
-		return false;
-	}
 	
-	public boolean updateUserInfo(UserInfo userInfo) {
-		Integer r = getSqlSession().update("user.updateUserInfo", userInfo);
+	public boolean updateUserInfo(int userIdx, String name, String phonenm, String img) {
+		Map<String,Object> pMap = new HashMap<String,Object>();
+		pMap.put("userIdx", userIdx);
+		pMap.put("name", name);
+		pMap.put("phonenm", phonenm);
+		pMap.put("img", img);
+		Integer r = getSqlSession().update("user.updateUserInfo", pMap);
 		if(r != null && r > 0) {
 			return true;
 		}
