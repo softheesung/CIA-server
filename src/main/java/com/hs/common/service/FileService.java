@@ -261,6 +261,12 @@ public class FileService {
 		extension.add("xls");extension.add("XLS");
 		extension.add("xlsx");extension.add("XLSX");
 		
+		extension.add("mp4");extension.add("MP4");
+		extension.add("avi");extension.add("AVI");
+		extension.add("mpeg");extension.add("MPEG");
+		extension.add("wmv");extension.add("WMV");
+		extension.add("mkv");extension.add("MKV");
+		
 //		String rootPath = "resources/upload/";
 //		if(directoryPath==null){
 //			directoryPath = "temp/";

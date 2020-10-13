@@ -3,6 +3,49 @@
 <mapper namespace="user">	
 
 
+	<!-- 특정 클래스를 수강하고 있는 회원 목록 쿼리 -->
+	<select id="getClassStudents" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.ClassStudent">
+		select 
+			a.idx as idx,
+			a.classIdx as classIdx,
+			a.userIdx as userIdx,
+			a.regdate as regdate,
+			b.img as img,
+			b.name as name,
+			b.email as email
+		from
+			hs_class_regist a,
+			hs_user_info b
+		where
+			a.userIdx = b.idx
+		and 
+			a.classIdx = #{classIdx} 
+		order by
+			a.regdate desc 
+	</select>
+	
+	<!-- 클래스 수강 탈퇴 -->
+	<delete id="deleteClassStudent" parameterType="java.util.Map">
+		delete from hs_class_regist where classIdx = #{classIdx} and userIdx = #{userIdx}
+	</delete>
+	
+	<!-- 클래스 수강 등록/가입 -->
+	<insert id="insertClassStudent" parameterType="java.util.Map">
+		insert into hs_class_regist 
+			(classIdx, userIdx, regdate)
+		values
+			(#{classIdx}, #{userIdx}, now())
+	</insert>
+
+
+
+
+
+
+
+
+
+
 
 	<delete id="deleteCur" parameterType="java.lang.Integer">
 		delete from hs_class_cur where idx = #{idx}

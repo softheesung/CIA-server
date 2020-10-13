@@ -130,7 +130,13 @@ create table hs_class_cur (
 	img text null
 );
 
-
+# 클래스 수강(참여) 
+create table hs_class_regist (
+	idx int(11) unsigned not null auto_increment primary key,
+	classIdx int(11) unsigned not null,
+	userIdx int(11) unsigned not null,
+	regdate datetime not null
+);
 
 
 

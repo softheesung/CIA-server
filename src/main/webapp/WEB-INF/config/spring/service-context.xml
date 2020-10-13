@@ -102,22 +102,6 @@
 	</bean> 
 	
 	<bean id="JwtService" class="com.hs.app.jwt.service.JwtService" />
-
-	<bean id="noteService" class="com.hs.app.note.service.NoteService"/>
-	<bean id="noteDao" class="com.hs.app.note.dao.NoteDao">
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" /> 
-	</bean> 
-	
-	<bean id="cashService" class="com.hs.app.pay.service.CashService"/>
-	<bean id="cashDao" class="com.hs.app.pay.dao.CashDao">
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" /> 
-	</bean> 
-	<bean id="payService" class="com.hs.app.pay.service.PayService"/>
-	<bean id="payDao" class="com.hs.app.pay.dao.PayDao">
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" /> 
-	</bean> 
-	
-	
 	
 	<bean id="basicDao" class="com.hs.app.basic.dao.BasicDao">
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" /> 

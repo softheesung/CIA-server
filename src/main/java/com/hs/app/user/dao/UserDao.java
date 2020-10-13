@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.hs.app.user.vo.ClassCat;
 import com.hs.app.user.vo.ClassInfo;
+import com.hs.app.user.vo.ClassStudent;
 import com.hs.app.user.vo.CurInfo;
 import com.hs.app.user.vo.StudyCat;
 import com.hs.app.user.vo.StudyInfo;
@@ -19,6 +20,33 @@ import com.hs.app.user.vo.UserInfo;
 public class UserDao extends SqlSessionDaoSupport {
 	
 	@Autowired private BCryptPasswordEncoder passwordEncoder;
+	
+	
+	public List<ClassStudent> getClassStudents(int classIdx) {
+		return getSqlSession().selectList("user.getClassStudents", classIdx);
+	}
+	
+	public boolean deleteClassStudent(int classIdx, int userIdx) {
+		Map<String,Object> pMap = new HashMap<String,Object>();
+		pMap.put("classIdx", classIdx);
+		pMap.put("userIdx", userIdx);
+		Integer r =  getSqlSession().delete("user.deleteClassStudent", pMap);
+		if(r!=null&&r>0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean insertClassStudent(int classIdx, int userIdx) {
+		Map<String,Object> pMap = new HashMap<String,Object>();
+		pMap.put("classIdx", classIdx);
+		pMap.put("userIdx", userIdx);
+		Integer r =  getSqlSession().insert("user.insertClassStudent", pMap);
+		if(r!=null&&r>0) {
+			return true;
+		}
+		return false;
+	}
 	
 	public boolean deleteCur(int idx) {
 		Integer r =  getSqlSession().delete("user.deleteCur", idx);

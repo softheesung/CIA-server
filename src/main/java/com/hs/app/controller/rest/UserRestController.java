@@ -26,6 +26,7 @@ import com.hs.app.user.dao.UserDao;
 import com.hs.app.user.service.UserService;
 import com.hs.app.user.vo.ClassCat;
 import com.hs.app.user.vo.ClassInfo;
+import com.hs.app.user.vo.ClassStudent;
 import com.hs.app.user.vo.CurInfo;
 import com.hs.app.user.vo.StudyCat;
 import com.hs.app.user.vo.StudyInfo;
@@ -50,33 +51,38 @@ public class UserRestController {
 -------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------
 	
-사진업로드: /file/upload [POST]
+	
+사진/영상 업로드 		/file/upload 					[POST]
 
-로그인: /api/users/signin [POST] 요청[email,password] 응답헤더[HSID]
-회원가입: 	/api/users/signup [POST] 요청[name,email,phonenm,password]
-프로필정보 가져오기: /api/users/profile [GET][Authorization] 응답[user(idx,password,name,phonenm,regdate,img)]
-프로필정보 수정 	/api/users/profile [PUT][Authorization] 요청[name,phonenm,img]
+로그인: 				/api/users/signin 				[POST] 						요청[email,password] 응답헤더[HSID]
+회원가입: 				/api/users/signup 				[POST] 						요청[name,email,phonenm,password]
+프로필정보 가져오기: 		/api/users/profile 				[GET][Authorization] 		응답[user(idx,password,name,phonenm,regdate,img)]
+프로필정보 수정 			/api/users/profile 				[POST][Authorization] 		요청[name,phonenm,img]
+
+
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+
+
+스터디등록:			/api/study/regist 				[POST][Authorization] 		요청[title,img,note,station,signdate,maxPeople,catIdx] 응답[insertedIdx]
+스터디목록 가져오기 		/api/study/ 					[GET] 						요청[page,rowBlockCount(1페이지당 가져올 컨텐츠수)] 응답[list,pageNav(페이징정보)]
+스터디수정 				/api/study/{스터디PK} 			[POST][Authorization] 		요청[title,img,note,station,signdate,maxPeople]
+스터디삭제 				/api/study/{스터디PK} 			[DELETE][Authorization]		 	
+스터디상세정보 가져오기 	/api/study/{스터디PK} 			[GET] 						응답[idx,title,img,note,station,signdate,maxPeople]
+
+스터디카테고리목록조회 	/api/study/cat 					[GET] 
+스터디 추천목록 가져오기 	/api/study/recomend 			[GET] 						요청[limitCount(몇개 가져올지)]
+
+스터디 수강회원 목록조회 	/api/study/{스터디PK}/students 	[GET] 						응답[list]
+스터디 가입 			/api/study/{스터디PK}/students 	[POST][Authorization]
+스터디 탈퇴 			/api/study/{스터디PK}/students 	[POST][Authorization]
+
+스터디 조회수+1			/api/study/{studyIdx}/views 	[POST]
+
 
 -------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------
 
-스터디등록: /api/study/regist [POST][Authorization] 요청[title,img,note,station,signdate,maxPeople,catIdx] 응답[insertedIdx]
-스터디목록 가져오기: /api/study/ [GET] 요청[page,rowBlockCount(1페이지당 가져올 컨텐츠수)] 응답[list,pageNav(페이징정보)]
-스터디수정: /api/study/{스터디PK} [PUT][Authorization] 요청[title,img,note,station,signdate,maxPeople]
-스터디삭제: /api/study/{스터디PK} [DELETE][Authorization] 
-스터디상세정보 가져오기: /api/study/{스터디PK} [GET] 응답[idx,title,img,note,station,signdate,maxPeople]
-
-스터디카테고리목록 가져오기: /api/study/cat [GET] 
-스터디 추천목록 가져오기 /api/study/recomend [GET] 요청[limitCount(몇개 가져올지)]
-
-스터디 수강회원 목록 가져오기: /api/study/{스터디PK}/students [GET] 응답[list]
-스터디 가입: /api/study/{스터디PK}/students [POST][Authorization]
-스터디 탈퇴: /api/study/{스터디PK}/students [POST][Authorization]
-
-스터디 조회수+1: /api/study/{studyIdx}/views [PUT]
-
--------------------------------------------------------------------------------------------
--------------------------------------------------------------------------------------------
 
 클래스 정보조회 			/api/class/{classIdx} 			[GET]
 클래스 카테고리 목록조회 	/api/class/cat 					[GET] 
@@ -85,20 +91,59 @@ public class UserRestController {
 
 클래스 삭제 			/api/class/{classIdx} 			[DELETE][Authorization] 
 클래스 등록				/api/class/regist	 			[POST][Authorization] 		요청[img, title, note, tags, catIdx] 응답[insertedIdx]
-클래스 수정 			/api/class/{classIdx} 			[PUT][Authorization] 		요청[img, title, note, tags, catIdx]
-클래스 조회수+1 		/api/class/{classIdx}/views 	[PUT]
+클래스 수정 			/api/class/{classIdx} 			[POST][Authorization] 		요청[img, title, note, tags, catIdx]
+클래스 조회수+1 		/api/class/{classIdx}/views 	[POST]
 
 회차 등록 				/api/class/curriculum/regist	[POST] 						요청[title,note,img,videoPath,numb,classIdx]
 회차 삭제				/api/class/curriculum/{idx} 	[DELETE]	
-클래스 회차 목록조회		/api/class/{classIdx}/curriculum[GET]						응답[lists]
+클래스 회차 목록조회		/api/class/{classIdx}/curriculum[GET]						응답[list]
+
+클래스 수강회원 목록조회	/api/class/{classIdx}/students 	[GET] 						응답[list]
+클래스 가입 			/api/class/{classIdx}/students 	[POST][Authorization]
+클래스 탈퇴 			/api/class/{classIdx}/students 	[POST][Authorization]
+
 
 -------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
 
-
- 
- 
 	
 */
+	
+	
+	/** 클래스 수강회원 목록 쿼리 */
+	@RequestMapping(value = "/class/{classIdx}/students", method = RequestMethod.GET)
+	public Map<String, Object> loadClassStudents(
+			@PathVariable Integer classIdx,
+			HttpServletRequest request, HttpServletResponse response) {
+		Map<String,Object> rst = new HashMap<String,Object>();
+		List<ClassStudent> lists = userDao.getClassStudents(classIdx);
+		rst.put("list", lists);
+		return rst;
+	}
+	/** 클래스수강 가입 */
+	@RequestMapping(value = "/class/{classIdx}/students", method = RequestMethod.POST)
+	public void registClassStudents(@PathVariable Integer classIdx,
+			HttpServletRequest request, HttpServletResponse response) {
+		String token = request.getAttribute("HSID").toString();
+		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
+		if(!userDao.insertClassStudent(classIdx, userIdx)) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		}
+	}
+	/** 클래스수강 탈퇴 */
+	@RequestMapping(value = "/class/{classIdx}/students", method = RequestMethod.DELETE)
+	public void withdrawClassStudents(
+			@PathVariable Integer classIdx,
+			HttpServletRequest request, HttpServletResponse response) {
+		String token = request.getAttribute("HSID").toString();
+		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
+		if(!userDao.deleteClassStudent(classIdx, userIdx)) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		}
+	}
+	
+	
+	
 	/** 특정 클래스의 회차 목록 로드 */
 	@RequestMapping(value = "/class/{classIdx}/curriculum", method = RequestMethod.GET)
 	public Map<String, Object> loadClassCurriculum(
@@ -150,12 +195,12 @@ public class UserRestController {
 	
 	
 	/** 클래스 조회수 증가 */
-	@RequestMapping(value = "/class/{classIdx}/views", method = RequestMethod.PUT)
+	@RequestMapping(value = "/class/{classIdx}/views", method = RequestMethod.POST)
 	public void insc123(@PathVariable Integer classIdx, HttpServletRequest request, HttpServletResponse response) {
 		userDao.increaseViewOfClass(classIdx);
 	}
 	/** 클래스 수정 */
-	@RequestMapping(value = "/class/{classIdx}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/class/{classIdx}", method = RequestMethod.POST)
 	public void updateClass(
 			@PathVariable Integer classIdx,
 			@RequestParam(required = false) String img,
@@ -274,35 +319,7 @@ public class UserRestController {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	/** 회원 로그인 */
@@ -354,7 +371,7 @@ public class UserRestController {
 	}
 	
 	/** 회원정보 수정 */
-	@RequestMapping(value = "/users/profile", method = RequestMethod.PUT)
+	@RequestMapping(value = "/users/profile", method = RequestMethod.POST)
 	public void updateUser(
 			@RequestParam(required = false) String img,
 			@RequestParam(required = false) String name,
@@ -408,7 +425,7 @@ public class UserRestController {
 	}
 	
 	/** 스터디 조회수 증가 */
-	@RequestMapping(value = "/study/{studyIdx}/views", method = RequestMethod.PUT)
+	@RequestMapping(value = "/study/{studyIdx}/views", method = RequestMethod.POST)
 	public void incS(@PathVariable Integer studyIdx,
 			HttpServletRequest request, HttpServletResponse response) {
 		
@@ -416,7 +433,7 @@ public class UserRestController {
 	}
 
 	/** 스터디 수정 */
-	@RequestMapping(value = "/study/{studyIdx}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/study/{studyIdx}", method = RequestMethod.POST)
 	public void updateStudy(
 			@RequestParam(required = false) String img,
 			@RequestParam(required = false) String title,
@@ -437,12 +454,12 @@ public class UserRestController {
 			return;
 		}
 		
-		studyInfo.setImg(img);
-		studyInfo.setTitle(title);
-		studyInfo.setNote(note);
-		studyInfo.setStation(station);
-		studyInfo.setSigndate(signdate);
-		studyInfo.setMaxPeople(maxPeople);
+		if(img!=null) studyInfo.setImg(img);
+		if(title!=null) studyInfo.setTitle(title);
+		if(note!=null) studyInfo.setNote(note);
+		if(station!=null) studyInfo.setStation(station);
+		if(signdate!=null) studyInfo.setSigndate(signdate);
+		if(maxPeople!=null) studyInfo.setMaxPeople(maxPeople);
 		
 		if(!userDao.updateStudy(studyInfo)) {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);

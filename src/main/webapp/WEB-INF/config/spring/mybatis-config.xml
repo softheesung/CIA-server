@@ -14,8 +14,6 @@
 		
         <mapper resource="sqlmap/sql-board.xml" />
         <mapper resource="sqlmap/sql-user.xml" />
-		<mapper resource="sqlmap/sql-note.xml" />
-		<mapper resource="sqlmap/sql-pay.xml" />
 		<mapper resource="sqlmap/sql-basic.xml" />
 		
 	</mappers>  
