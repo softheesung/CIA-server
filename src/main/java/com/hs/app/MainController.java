@@ -34,12 +34,19 @@ public class MainController {
 	@Autowired private UserDao userDao;
 	
 
-
 	@RequestMapping(value = "signout", method = RequestMethod.GET)
 	public String signout(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws IOException {
 		CookieUtil.deleteAllCookite(request, response);
         return "redirect:/signin";
 	}
+	
+	
+	@RequestMapping(value = "stat/basic", method = RequestMethod.GET)
+	public String getAppPage(ModelMap model) {
+        
+        return "run:app";
+	}
+	
 	
 	
 }

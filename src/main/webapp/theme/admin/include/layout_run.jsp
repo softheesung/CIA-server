@@ -25,14 +25,14 @@
 	<meta name="robots" content="noindex">
 	<meta name="googlebot" content="noindex">
 	
-	<title>Hiddengolfer Management</title> 
+	<title>CIA Statistics</title> 
 	
 	<link rel="shortcut icon" href="/resources/favicon.ico" type="image/x-icon"/> 
 	
 	<!-- font destnation -->
-	<link type="text/css" rel="stylesheet" href="/common_${RESOURCES_VER}/font/NanumSquareRound/style.css"/>  
+	<%-- <link type="text/css" rel="stylesheet" href="/common_${RESOURCES_VER}/font/NanumSquareRound/style.css"/>  
 	<link type="text/css" rel="stylesheet" href="/common_${RESOURCES_VER}/font/NanumBarunGothic/style.css"/>  
-	<link type="text/css" href="//fonts.googleapis.com/earlyaccess/nanumgothic.css" rel="stylesheet" />
+	<link type="text/css" href="//fonts.googleapis.com/earlyaccess/nanumgothic.css" rel="stylesheet" /> --%>
 	
 	<!-- normalize -->
 	<link type="text/css" rel="stylesheet" href="/theme_admin/normalize.css"/>
@@ -60,16 +60,14 @@
 		
 	<section id="wrapper">
 		
-		<header class="header clearfix">
+		<header class="header clearfix" style="height: 68px;">
 					
-			<a href="/coldbrew/"><strong class="logo" style="font-size: 30px; font-weight: 800; line-height: 60px;">HiddenGolfer</strong></a>
+			<a href="/stat/basic"><strong class="logo" style="font-size: 30px; font-weight: 800; line-height: 60px;">CIA Statistics</strong></a>
 			
 			<div class="pc-open">   
 				
-				<span class="bar">&nbsp;</span>
-				<a href="/" class="b">home</a>
-				<span class="bar">&nbsp;</span>
-				<a href="/signout" class="b">logout</a>
+<!-- 				<span class="bar">&nbsp;</span> -->
+				<a href="/" class="b"><img src="/theme_admin/img/play.png" style="position: relative; top: -13px;"/></a>
 				
 			</div>
 			<div class="m-open-block">
@@ -87,28 +85,11 @@
 					<h2>Dashboard</h2>
 					<ul class="sub_navi">
 						
-						<li class="c_g">APP</li>
-<!-- 						<li><a href="">Dashboard</a></li> -->
-						<li><a href="/coldbrew/pg/app">App properties</a></li>
-						
-						<li class="c_g">USERS</li> 
-						<li><a href="/coldbrew/pg/user/list">회원 관리</a></li>
-						<li><a href="/coldbrew/pg/user/alba/list">알바 관리</a></li>
+						<li class="c_g">Statistics</li>
+
+						<li><a href="/stat/basic">Category</a></li>
 						
 						
-						<li class="c_g">NOTES</li> 
-						<li><a href="/coldbrew/pg/notes/list">쪽지 기록</a></li>
-						
-						
-						<li class="c_g">PAY&CASH</li> 
-						<li><a href="/coldbrew/pg/exchange/list">현금인출 요청관리</a></li>
-						<li><a href="/coldbrew/pg/pay/list">결제 관리</a></li>
-						<li><a href="/coldbrew/pg/cash/list">캐시 내역</a></li>
-						
-						<li class="c_g">BOARDS</li>
-						<li><a href="/coldbrew/pg/board/list">게시판 관리</a></li>
-						<li><a href="/coldbrew/pg/board/menu">메뉴 관리</a></li>
-<!-- 						<li><a href="">고갠센터 관리</a></li> -->
 						
 						
 					
@@ -120,7 +101,7 @@
             
 			
 			<footer class="footer">
-				Copyright ⓒ 서비스이름 2020.All rights reserved.
+				Copyright ⓒ Collective Intelligence in Army 2020.All rights reserved.
 			</footer>	
 		</section>
 		<!-- #####################################################################[컨테이너 끝] -->

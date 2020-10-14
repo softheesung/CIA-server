@@ -83,7 +83,7 @@ input, textarea, button, select { -moz-border-radius:0; -o-border-radius:0; bord
 	background: #fff; width: 100%; box-sizing: border-box; 
 	transform-style: preserve-3d; transition: 0.3s; 
 	box-sizing: border-box;
-	padding: 19px 19px 19px 109px;
+	padding: 5px 19px 5px 109px;
 	text-align: right;
 	position: fixed;
 	left: 0px;

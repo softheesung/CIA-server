@@ -22,6 +22,14 @@ public class UserDao extends SqlSessionDaoSupport {
 	@Autowired private BCryptPasswordEncoder passwordEncoder;
 	
 	
+	public List<ClassInfo> loadRegistClassByUserIdx(int userIdx) {
+		return getSqlSession().selectList("user.loadRegistClassByUserIdx", userIdx);
+	}
+	
+	public List<StudyInfo> loadRegistStudyByUserIdx(int userIdx) {
+		return getSqlSession().selectList("user.loadRegistStudyByUserIdx", userIdx);
+	}
+	
 	public List<ClassStudent> getClassStudents(int classIdx) {
 		return getSqlSession().selectList("user.getClassStudents", classIdx);
 	}

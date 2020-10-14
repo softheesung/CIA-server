@@ -106,8 +106,40 @@ public class UserRestController {
 -------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------
 
+내 클래스 목록 			/api/class/me 					[GET][Authorization]		응답[list]
+내 스터디 목록 			/api/study/me 					[GET][Authorization]		응답[list]
+
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+
 	
 */
+	
+	/** 내가 수강한 클래스 목록 쿼리 */
+	@RequestMapping(value = "/class/me", method = RequestMethod.GET)
+	public Map<String, Object> loadClassMe(HttpServletRequest request, HttpServletResponse response) {
+		
+		String token = request.getAttribute("HSID").toString();
+		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
+		
+		Map<String,Object> rst = new HashMap<String,Object>();
+		List<ClassInfo> lists = userDao.loadRegistClassByUserIdx(userIdx);
+		rst.put("list", lists);
+		return rst;
+	}
+	/** 내가 수강한 스터디 목록 쿼리 */
+	@RequestMapping(value = "/study/me", method = RequestMethod.GET)
+	public Map<String, Object> loadStudyMe(HttpServletRequest request, HttpServletResponse response) {
+		
+		String token = request.getAttribute("HSID").toString();
+		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
+		
+		Map<String,Object> rst = new HashMap<String,Object>();
+		List<StudyInfo> lists = userDao.loadRegistStudyByUserIdx(userIdx);
+		rst.put("list", lists);
+		return rst;
+	}
+	
 	
 	
 	/** 클래스 수강회원 목록 쿼리 */

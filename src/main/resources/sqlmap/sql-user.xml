@@ -290,7 +290,7 @@
 			enabled,
 			tags,
 			catIdx,
-			(select name from hs_study_cat where idx = a.catidx) as catName
+			(select name from hs_study_cat where idx = a.catIdx) as catName
 		from 
 			hs_study_info as a
 		where
@@ -306,6 +306,59 @@
             idx desc 
         limit 
             #{startRow}, #{rowBlockCount}
+	</select>
+	
+	
+	<!-- 내가 수강중인 클래스 목록 로드 -->
+	<select id="loadRegistClassByUserIdx" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.ClassInfo">
+		select 
+			b.idx as idx,
+			b.userIdx as userIdx,
+			a.regdate as regdate,
+			b.img as img,
+			b.title as title,
+			b.note as note,
+			b.viewCount as viewCount,
+			b.tags as tags,
+			b.catIdx as catIdx,
+			(select name from hs_user_info where idx = b.userIdx) as userName,
+			(select name from hs_class_cat where idx = b.catIdx) as catName
+		from
+			hs_class_regist a,
+			hs_class_info b
+		where
+			a.classIdx = b.idx
+		and 
+			a.userIdx = #{userIdx} 
+		order by
+			a.regdate desc 
+	</select>
+	<!-- 내가 수강중인 스터디 목록 로드 -->
+	<select id="loadRegistStudyByUserIdx" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.StudyInfo">
+		select 
+			b.idx as idx,
+			b.userIdx as userIdx,
+			a.regdate as regdate,
+			b.img as img,
+			b.title as title,
+			b.note as note,
+			b.viewCount as viewCount,
+			b.station as station,
+			b.signdate as signdate,
+			b.maxPeople as maxPeople,
+			b.tags as tags,
+			b.catIdx as catIdx,
+			(select name from hs_user_info where idx = b.userIdx) as userName,
+			(select name from hs_study_cat where idx = b.catIdx) as catName
+		from
+			hs_study_regist a,
+			hs_study_info b
+		where
+			a.studyIdx = b.idx
+		and 
+			a.userIdx = #{userIdx} 
+		order by
+			a.regdate desc 
 	</select>
 
 	<!-- 특정 스터디를 수강하고 있는 회원 목록 쿼리 -->
