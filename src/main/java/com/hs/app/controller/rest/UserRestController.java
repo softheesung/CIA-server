@@ -109,11 +109,53 @@ public class UserRestController {
 내 클래스 목록 			/api/class/me 					[GET][Authorization]		응답[list]
 내 스터디 목록 			/api/study/me 					[GET][Authorization]		응답[list]
 
+내가 개설한 클래스 목록 	/api/class/manage 				[GET][Authorization]		응답[list]
+내가 개설한 스터디 목록 	/api/study/manage 				[GET][Authorization]		응답[list]
+
 -------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------
 
 	
 */
+	@RequestMapping(value = "/stat/2", method = RequestMethod.GET)
+	public Map<String, Object> getStat2(HttpServletRequest request, HttpServletResponse response) {
+		Map<String,Object> rst = new HashMap<String,Object>();
+		rst.put("list", userDao.loadClassRateByCat());
+		return rst;
+	}
+	@RequestMapping(value = "/stat/1", method = RequestMethod.GET)
+	public Map<String, Object> getStat1(HttpServletRequest request, HttpServletResponse response) {
+		Map<String,Object> rst = new HashMap<String,Object>();
+		rst.put("list", userDao.loadStudyRateByCat());
+		return rst;
+	}
+	
+	
+	
+	/** 내가 개설한 클래스 목록 쿼리 */
+	@RequestMapping(value = "/class/manage", method = RequestMethod.GET)
+	public Map<String, Object> loadMyClass(HttpServletRequest request, HttpServletResponse response) {
+		
+		String token = request.getAttribute("HSID").toString();
+		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
+		
+		Map<String,Object> rst = new HashMap<String,Object>();
+		List<ClassInfo> lists = userDao.loadMyClass(userIdx);
+		rst.put("list", lists);
+		return rst;
+	}
+	/** 내가 개설한 스터디 목록 쿼리 */
+	@RequestMapping(value = "/study/manage", method = RequestMethod.GET)
+	public Map<String, Object> loadMyStudy(HttpServletRequest request, HttpServletResponse response) {
+		
+		String token = request.getAttribute("HSID").toString();
+		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
+		
+		Map<String,Object> rst = new HashMap<String,Object>();
+		List<StudyInfo> lists = userDao.loadMyStudy(userIdx);
+		rst.put("list", lists);
+		return rst;
+	}
 	
 	/** 내가 수강한 클래스 목록 쿼리 */
 	@RequestMapping(value = "/class/me", method = RequestMethod.GET)

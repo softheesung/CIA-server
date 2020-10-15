@@ -141,6 +141,75 @@ create table hs_class_regist (
 
 
 
+select
+	b.catIdx as catIdx,
+	a.classIdx as classIdx,
+	b.title as title
+from
+	hs_class_regist as a,
+	hs_class_info as b
+where 
+	a.classIdx = b.idx 
+
+
+
+##
+select
+	b.catIdx as catIdx,
+	(select name from hs_study_cat where idx = b.catIdx) as catName,
+	count(*) as count,
+	(select count(*) as count from hs_study_regist as a, hs_study_info as b where a.studyIdx = b.idx) as sum
+from
+	hs_study_regist as a,
+	hs_study_info as b
+where 
+	a.studyIdx = b.idx 
+group by
+	catIdx
+order by 
+	catIdx asc;
+	
+
+
+##
+select
+	count(*) as count
+from
+	hs_study_regist as a,
+	hs_study_info as b
+where 
+	a.studyIdx = b.idx ;
+
+
+
+
+select count(*) from hs_study_regist  	
+
+
+insert into hs_study_regist (studyIdx, userIdx, regdate) values(21, 2, now());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

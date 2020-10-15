@@ -2,6 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd"> 
 <mapper namespace="user">	
 
+	
+	<select id="loadClassRateByCat" resultType="java.util.Map">
+		select
+			b.catIdx as catIdx,
+			(select name from hs_class_cat where idx = b.catIdx) as catName,
+			count(*) as count,
+			(select count(*) as count from hs_class_regist as a, hs_class_info as b where a.classIdx = b.idx) as sum
+		from
+			hs_class_regist as a,
+			hs_class_info as b
+		where 
+			a.classIdx = b.idx 
+		group by
+			catIdx
+		order by 
+			catIdx asc
+	</select>
+	
+	<select id="loadStudyRateByCat" resultType="java.util.Map">
+		select
+			b.catIdx as catIdx,
+			(select name from hs_study_cat where idx = b.catIdx) as catName,
+			count(*) as count,
+			(select count(*) as count from hs_study_regist as a, hs_study_info as b where a.studyIdx = b.idx) as sum
+		from
+			hs_study_regist as a,
+			hs_study_info as b
+		where 
+			a.studyIdx = b.idx 
+		group by
+			catIdx
+		order by 
+			catIdx asc
+	</select>
+
+
+
+
+
+
+
+
+
+
 
 	<!-- 특정 클래스를 수강하고 있는 회원 목록 쿼리 -->
 	<select id="getClassStudents" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.ClassStudent">
@@ -110,7 +154,7 @@
 		insert into hs_class_info 
 			(userIdx, regdate, img, enabled, title, note, viewCount, catIdx, tags)
 		values
-			(#{userIdx}, now(), #{img}, #{enabled}, #{title}, #{note}, #{viewCount}, #{catIdx}, #{tags})
+			(#{userIdx}, now(), #{img}, true, #{title}, #{note}, #{viewCount}, #{catIdx}, #{tags})
 	</insert>
 	<!-- 방금 등록한 클래스 고유번호 쿼리 -->
 	<select id="getInsertedClassIdx" parameterType="com.hs.app.user.vo.ClassInfo" resultType="java.lang.Integer">
@@ -177,6 +221,19 @@
 	</select>
 	
 	
+	
+	<select id="loadMyClass" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.ClassInfo">
+		select 
+			idx, userIdx, regdate, img, enabled, title, note, viewCount, catIdx, tags,
+			(select name from hs_user_info where idx = hs_class_info.userIdx) as userName,
+			(select name from hs_class_cat where idx = hs_class_info.catIdx) as catName
+		from
+			hs_class_info 
+		where 
+			userIdx = #{userIdx}
+		order by
+            idx desc 
+	</select>
 	
 	
 	
@@ -306,6 +363,31 @@
             idx desc 
         limit 
             #{startRow}, #{rowBlockCount}
+	</select>
+	
+	<select id="loadMyStudy" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.StudyInfo">
+		select 
+			idx,
+			userIdx,
+			(select name from hs_user_info where idx = a.userIdx) as userName,
+			regdate,
+			img,
+			title,
+			note,
+			viewCount,
+			station,
+			signdate,
+			maxPeople,
+			enabled,
+			tags,
+			catIdx,
+			(select name from hs_study_cat where idx = a.catIdx) as catName
+		from 
+			hs_study_info as a
+		where
+			userIdx = #{userIdx}	
+		order by
+            idx desc 
 	</select>
 	
 	

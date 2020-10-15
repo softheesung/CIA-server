@@ -3,13 +3,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
-       
-<c:set var="APP_SITE_DOMAIN"><spring:eval expression="@siteinfo['app.domain']"></spring:eval></c:set>  
-<c:set var="APP_SITE_NAME"><spring:eval expression="@siteinfo['app.sitename']"></spring:eval></c:set>  
-<c:set var="APP_SITE_URL"><spring:eval expression="@siteinfo['app.siteurl']"></spring:eval></c:set>  
-<c:set var="CURRENT_REQ_URL">${APP_SITE_URL}${requestScope['javax.servlet.forward.request_uri']}<c:if test='${requestScope["javax.servlet.forward.query_string"]!=null}'>?${requestScope['javax.servlet.forward.query_string']}</c:if></c:set>
-<c:set var="IMGUR_CLIENT_ID"><spring:eval expression="@siteinfo['app.upload.imgur.id']"></spring:eval></c:set>
-<c:set var="GOOGLE_ANALY_ID"><spring:eval expression="@siteinfo['app.google.analytics.id']"></spring:eval></c:set>
 <c:set var="RESOURCES_VER"><spring:eval expression="@siteinfo['app.resource.ver']"></spring:eval></c:set>
 
 <!DOCTYPE html>
@@ -28,21 +21,15 @@
 	<title>CIA Statistics</title> 
 	
 	<link rel="shortcut icon" href="/resources/favicon.ico" type="image/x-icon"/> 
-	
-	<!-- font destnation -->
-	<%-- <link type="text/css" rel="stylesheet" href="/common_${RESOURCES_VER}/font/NanumSquareRound/style.css"/>  
-	<link type="text/css" rel="stylesheet" href="/common_${RESOURCES_VER}/font/NanumBarunGothic/style.css"/>  
-	<link type="text/css" href="//fonts.googleapis.com/earlyaccess/nanumgothic.css" rel="stylesheet" /> --%>
-	
+
 	<!-- normalize -->
 	<link type="text/css" rel="stylesheet" href="/theme_admin/normalize.css"/>
 	
-	
 	<script type="text/javascript" src="/common_${RESOURCES_VER}/js/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="/common_${RESOURCES_VER}/js/jquery.form.js"></script>
-	<script type="text/javascript" src="/common_${RESOURCES_VER}/editor/ckeditor/ckeditor.js"></script>
-	<script type="text/javascript" src="/common_${RESOURCES_VER}/editor/editor.js"></script> 
-	<script type="text/javascript" src="/common_${RESOURCES_VER}/js/md5.js"></script> 
+<%-- 	<script type="text/javascript" src="/common_${RESOURCES_VER}/editor/ckeditor/ckeditor.js"></script> --%>
+<%-- 	<script type="text/javascript" src="/common_${RESOURCES_VER}/editor/editor.js"></script>  --%>
+<%-- 	<script type="text/javascript" src="/common_${RESOURCES_VER}/js/md5.js"></script>  --%>
 	
 	<!-- fontawesome -->
 	<link rel="stylesheet" href="/common_${RESOURCES_VER}/fontawesome/css/all.min.css"/>
