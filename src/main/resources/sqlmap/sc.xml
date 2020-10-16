@@ -85,7 +85,9 @@ create table hs_study_regist (
 insert into hs_class_info 
 	(userIdx,  regdate, img, title, note, catIdx, tags) 
 values
-	(1, now(), 'images', 'title', 'note', 1, 'tree,plant');
+	(1, now(), 'images', '극자외선(EUV) 노광장비 제조업체 ASML의 3분기 매출', '극자외선(EUV) 노광장비 제조업체 ASML의 3분기 매출', 2, 'tree,plant');
+
+insert into hs_class_regist (classIdx, userIdx, regdate) values(2, 1, now());
 
 
 클래스 정보
