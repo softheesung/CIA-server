@@ -162,7 +162,12 @@
 	</select>
 	
 	<select id="getClassInfo" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.ClassInfo">
-		select * from hs_class_info where idx = #{idx}
+		select 
+			idx, userIdx, regdate, img, enabled, title, note, viewCount, catIdx, tags,
+			(select name from hs_user_info where idx = a.userIdx) as userName,
+			(select name from hs_study_cat where idx = a.catidx) as catName
+		from 
+			hs_class_info where idx = #{idx}
 	</select> 
 
 	<select id="getClassCatList" resultType="com.hs.app.user.vo.ClassCat">
@@ -251,7 +256,24 @@
 	
 	
 	<select id="getStudy" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.StudyInfo">
-		select * from hs_study_info where idx = #{idx}
+		select 
+			idx,
+			userIdx,
+			(select name from hs_user_info where idx = a.userIdx) as userName,
+			regdate,
+			img,
+			title,
+			note,
+			viewCount,
+			station,
+			signdate,
+			maxPeople,
+			enabled,
+			tags,
+			catIdx,
+			(select name from hs_study_cat where idx = a.catidx) as catName
+		from 
+			hs_study_info where idx = #{idx}
 	</select>
 	
 	<!-- 스터디 삭제 -->
@@ -479,7 +501,23 @@
 	
 	
 	<select id="getUser" parameterType="java.lang.Integer" resultType="com.hs.app.user.vo.UserInfo">
-		select * from hs_user_info where idx = #{idx}
+		select 
+			idx,
+			password,
+			name,
+			email,
+			phonenm,
+			regdate,
+			img,
+			enabled,
+			(select count(*) from hs_class_info where userIdx = a.idx) as myClassCount,
+			(select count(*) from hs_study_info where userIdx = a.idx) as myStudyCount,
+			(select count(*) from hs_class_regist where userIdx = a.idx) as regClassCount,
+			(select count(*) from hs_study_regist where userIdx = a.idx) as regStudyCount
+		from 
+			hs_user_info as a
+		where 
+			idx = #{idx}
 	</select>
 	
 	

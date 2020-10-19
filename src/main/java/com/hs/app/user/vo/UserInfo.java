@@ -11,13 +11,42 @@ public class UserInfo {
 	private String name;
 	private String email;
 	private String phonenm;
-	private String regdate;
+	private String regdate;	// 가입일
 	private String img;
 	private Boolean enabled;
 	private String authList;
+	private int myClassCount;	// 내가 개설한 강의수
+	private int myStudyCount;	// 내가 개설한 모임수
+	private int regClassCount;	// 내가 수강중 강의수
+	private int regStudyCount;	// 내가 수장궁 모임수
 	
 	
 	
+	
+	public int getMyClassCount() {
+		return myClassCount;
+	}
+	public void setMyClassCount(int myClassCount) {
+		this.myClassCount = myClassCount;
+	}
+	public int getMyStudyCount() {
+		return myStudyCount;
+	}
+	public void setMyStudyCount(int myStudyCount) {
+		this.myStudyCount = myStudyCount;
+	}
+	public int getRegClassCount() {
+		return regClassCount;
+	}
+	public void setRegClassCount(int regClassCount) {
+		this.regClassCount = regClassCount;
+	}
+	public int getRegStudyCount() {
+		return regStudyCount;
+	}
+	public void setRegStudyCount(int regStudyCount) {
+		this.regStudyCount = regStudyCount;
+	}
 	public String getAuthList() {
 		return authList;
 	}

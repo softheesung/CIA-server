@@ -136,9 +136,15 @@ public class UserRestController {
 	@RequestMapping(value = "/class/manage", method = RequestMethod.GET)
 	public Map<String, Object> loadMyClass(HttpServletRequest request, HttpServletResponse response) {
 		
-		String token = request.getAttribute("HSID").toString();
-		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
-		
+		Integer userIdx = null;
+		try {
+			String token = request.getAttribute("HSID").toString();
+			userIdx = Integer.parseInt(jwtService.getMemberId(token));
+		}catch(Exception ec) {
+			System.out.println("[ERROR] 권한오류");
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
 		Map<String,Object> rst = new HashMap<String,Object>();
 		List<ClassInfo> lists = userDao.loadMyClass(userIdx);
 		rst.put("list", lists);
@@ -148,9 +154,15 @@ public class UserRestController {
 	@RequestMapping(value = "/study/manage", method = RequestMethod.GET)
 	public Map<String, Object> loadMyStudy(HttpServletRequest request, HttpServletResponse response) {
 		
-		String token = request.getAttribute("HSID").toString();
-		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
-		
+		Integer userIdx = null;
+		try {
+			String token = request.getAttribute("HSID").toString();
+			userIdx = Integer.parseInt(jwtService.getMemberId(token));
+		}catch(Exception ec) {
+			System.out.println("[ERROR] 권한오류");
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
 		Map<String,Object> rst = new HashMap<String,Object>();
 		List<StudyInfo> lists = userDao.loadMyStudy(userIdx);
 		rst.put("list", lists);
@@ -161,9 +173,15 @@ public class UserRestController {
 	@RequestMapping(value = "/class/me", method = RequestMethod.GET)
 	public Map<String, Object> loadClassMe(HttpServletRequest request, HttpServletResponse response) {
 		
-		String token = request.getAttribute("HSID").toString();
-		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
-		
+		Integer userIdx = null;
+		try {
+			String token = request.getAttribute("HSID").toString();
+			userIdx = Integer.parseInt(jwtService.getMemberId(token));
+		}catch(Exception ec) {
+			System.out.println("[ERROR] 권한오류");
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
 		Map<String,Object> rst = new HashMap<String,Object>();
 		List<ClassInfo> lists = userDao.loadRegistClassByUserIdx(userIdx);
 		rst.put("list", lists);
@@ -173,9 +191,15 @@ public class UserRestController {
 	@RequestMapping(value = "/study/me", method = RequestMethod.GET)
 	public Map<String, Object> loadStudyMe(HttpServletRequest request, HttpServletResponse response) {
 		
-		String token = request.getAttribute("HSID").toString();
-		int userIdx = Integer.parseInt(jwtService.getMemberId(token));
-		
+		Integer userIdx = null;
+		try {
+			String token = request.getAttribute("HSID").toString();
+			userIdx = Integer.parseInt(jwtService.getMemberId(token));
+		}catch(Exception ec) {
+			System.out.println("[ERROR] 권한오류");
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
 		Map<String,Object> rst = new HashMap<String,Object>();
 		List<StudyInfo> lists = userDao.loadRegistStudyByUserIdx(userIdx);
 		rst.put("list", lists);
